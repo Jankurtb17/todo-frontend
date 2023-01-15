@@ -10,12 +10,17 @@
             :span="4"
             class="grid-content left-content"
           >
-            <h1 class="main-text">Welcome Back</h1>
+            <h1 class="main-text">Welcome</h1>
             <el-form>
-              <el-row>
-                <el-button style="width: 100%">SIGN IN WITH GOOGLE</el-button>
+              <el-row class="login-google">
+                <img src="@/assets/google.svg" class="google-icon" />
+                <span>SIGN IN WITH GOOGLE</span>
               </el-row>
-              <p class="login-email">- Or login with email -</p>
+              <div class="group">
+                <div class="item line"></div>
+                <div class="item text">or login with email</div>
+                <div class="item line"></div>
+              </div>
               <div>
                 <BaseInput
                   v-model="form.email"
@@ -31,13 +36,17 @@
                   clearable
                 />
               </div>
-              <el-button style="height: 40px">Sign In</el-button>
+              <el-button style="width: 100%" class="btn btn-login">Sign In</el-button>
 
-              <div></div>
+              <div class="login-register">
+                <div>Don't have an account yet? Register <router-link to="/" class="register-link">here</router-link></div>
+              </div>
             </el-form>
           </el-col>
           <el-col :xl="6" :lg="6" :span="12" class="grid-content right-content"
-            >JFETM Todo Application</el-col
+            >
+            <img src="@/assets/task.svg" class="img-right"/>            
+            </el-col
           >
         </el-row>
       </el-main>
@@ -63,18 +72,19 @@ const form = reactive({} as FormInput);
 }
 
 .el-col {
-  height: 60vh;
+  min-height: 60vh;
   border: 1px solid lightgray;
 }
 
 .left-content {
-  background-color: #7569de;
+  background-color: #33658A;
   color: white;
 }
 
 .main-text {
   text-align: center;
   font-size: 35px;
+  padding-top: 25px;
 }
 .el-form {
   padding: 0 40px;
@@ -84,10 +94,74 @@ const form = reactive({} as FormInput);
   padding-left: 5px;
 }
 
+.login-google {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  color: #F26419;
+  padding: 3px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.google-icon {
+  margin-right: 5px;
+  font-size: 18px;
+}
+
 .el-form {
   padding-top: 30px;
 }
 
-.login-email {
+.group {
+  margin: 20px 0;
+  display: table;
+  width: 100%;
+}
+
+.item {
+  display: table-cell;
+}
+
+.text {
+  white-space: nowrap;
+  width: 1%;
+  padding: 0 10px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+}
+
+.line {
+  border-bottom: 1px solid white;
+  position: relative;
+  top: -.5em
+}
+
+.btn {
+  height: 40px;
+}
+
+.btn-login {
+  margin-top: 15px;
+  background-color: #F26419;
+  color: white;
+  border-color: #F26419;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+
+.login-register {
+  padding-top: 50px;
+  text-align: center;
+}
+
+.register-link {
+  color: white;
+}
+
+.img-right {
+  padding-top: 20px;
 }
 </style>

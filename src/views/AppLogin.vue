@@ -10,8 +10,12 @@
             :span="4"
             class="grid-content left-content"
           >
-            <h1 class="pl-10">Login</h1>
+            <h1 class="main-text">Welcome Back</h1>
             <el-form>
+              <el-row>
+                <el-button style="width: 100%">SIGN IN WITH GOOGLE</el-button>
+              </el-row>
+              <p class="login-email">- Or login with email -</p>
               <div>
                 <BaseInput
                   v-model="form.email"
@@ -29,10 +33,7 @@
               </div>
               <el-button style="height: 40px">Sign In</el-button>
 
-              <div>
-                <span>- or sign in with -</span>
-                <button>GOOGLE</button>
-              </div>
+              <div></div>
             </el-form>
           </el-col>
           <el-col :xl="6" :lg="6" :span="12" class="grid-content right-content"
@@ -71,12 +72,22 @@ const form = reactive({} as FormInput);
   color: white;
 }
 
+.main-text {
+  text-align: center;
+  font-size: 35px;
+}
 .el-form {
-  padding-left: 10px;
-  padding-right: 10px;
+  padding: 0 40px;
 }
 
 .pl-10 {
-  padding-left: 10px;
+  padding-left: 5px;
+}
+
+.el-form {
+  padding-top: 30px;
+}
+
+.login-email {
 }
 </style>

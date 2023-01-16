@@ -5,9 +5,16 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'login',
+      name: 'main-login',
       components: {
-        Login: () => import('../views/AppLogin.vue')
+        Login: () => import('@/views/AppLogin.vue')
+      }
+    },
+    {
+      path: '/login',
+      name: 'md-login',
+      components: {
+        Login: () => import('@/views/AppSmLogin.vue')
       }
     },
   ]

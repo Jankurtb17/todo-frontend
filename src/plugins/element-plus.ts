@@ -58,7 +58,7 @@ import {
   CircleCloseFilled,
   SuccessFilled,
   Back,
-  ArrowDown
+  ArrowDown,
 } from "@element-plus/icons-vue";
 
 export default (app: App): void => {

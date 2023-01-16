@@ -2,7 +2,7 @@
   <div class="main-view">
     <el-container>
       <el-main>
-        <el-row class="row" justify="center">
+        <el-row class="row lg-devices" justify="center">
           <el-col
             :xl="6"
             :lg="6"
@@ -36,18 +36,40 @@
                   clearable
                 />
               </div>
-              <el-button style="width: 100%" class="btn btn-login">Sign In</el-button>
+              <el-button style="width: 100%" class="btn btn-login"
+                >Sign In</el-button
+              >
 
               <div class="login-register">
-                <div>Don't have an account yet? Register <router-link to="/" class="register-link">here</router-link></div>
+                <div>
+                  Don't have an account yet? Register
+                  <router-link to="/" class="register-link">here</router-link>
+                </div>
               </div>
             </el-form>
           </el-col>
-          <el-col :xl="6" :lg="6" :span="12" class="grid-content right-content"
-            >
-            <img src="@/assets/task.svg" class="img-right"/>            
-            </el-col
-          >
+          <el-col :xl="6" :lg="6" :span="12" class="grid-content right-content">
+            <img src="@/assets/task.svg" class="img-right" />
+          </el-col>
+        </el-row>
+
+        <el-row justify="center" class="mdsm-devices">
+          <el-col :span="14">
+            <div>
+              <img src="@/assets/task.svg" class="img-sm" />
+              <h1>Hello!</h1>
+              <p>
+                Best place to log your task and <br />
+                share your experiences
+              </p>
+            </div>
+            <div class="md-btn">
+              <router-link to="/login" class="login-btn">LOGIN</router-link>
+              <router-link to="/register" class="register-btn"
+                >REGISTER</router-link
+              >
+            </div>
+          </el-col>
         </el-row>
       </el-main>
     </el-container>
@@ -57,7 +79,7 @@
 <script lang="ts" setup>
 import BaseInput from "@/components/BaseInput.vue";
 import { ref, reactive } from "vue";
-
+defineProps(["class"]);
 type FormInput = {
   email: string;
   password: string;
@@ -77,7 +99,7 @@ const form = reactive({} as FormInput);
 }
 
 .left-content {
-  background-color: #33658A;
+  background-color: #33658a;
   color: white;
 }
 
@@ -99,7 +121,7 @@ const form = reactive({} as FormInput);
   justify-content: center;
   align-items: center;
   background-color: white;
-  color: #F26419;
+  color: #f26419;
   padding: 3px;
   cursor: pointer;
   border-radius: 4px;
@@ -135,7 +157,7 @@ const form = reactive({} as FormInput);
 .line {
   border-bottom: 1px solid white;
   position: relative;
-  top: -.5em
+  top: -0.5em;
 }
 
 .btn {
@@ -144,13 +166,12 @@ const form = reactive({} as FormInput);
 
 .btn-login {
   margin-top: 15px;
-  background-color: #F26419;
+  background-color: #f26419;
   color: white;
-  border-color: #F26419;
+  border-color: #f26419;
   text-transform: uppercase;
   letter-spacing: 2px;
 }
-
 
 .login-register {
   padding-top: 50px;
@@ -163,5 +184,117 @@ const form = reactive({} as FormInput);
 
 .img-right {
   padding-top: 20px;
+}
+
+@media only screen and (min-width: 320px) and (max-width: 480px) {
+  .lg-devices {
+    display: none;
+  }
+
+  .img-sm {
+    position: relative;
+  }
+
+  .el-col {
+    border: none;
+  }
+
+  .mdsm-devices h1 {
+    font-size: 50px;
+    text-align: center;
+    letter-spacing: 5px;
+    font-family: "Roboto", sans-serif;
+    font-weight: 600;
+  }
+  .mdsm-devices p {
+    text-align: center;
+    font-size: 30px;
+    color: rgb(178, 184, 185);
+  }
+}
+
+/*  Tablet */
+@media only screen and (min-width: 481px) and (max-width: 780px) {
+  .lg-devices {
+    display: none;
+  }
+
+  .img-sm {
+    position: relative;
+  }
+
+  .el-col {
+    border: none;
+  }
+
+  /* .mdsm-devices {
+    transition: 600ms ease all;
+    transform: translateX(-50px);
+  } */
+
+  .mdsm-devices h1 {
+    font-size: 50px;
+    text-align: center;
+    letter-spacing: 5px;
+    font-family: "Roboto", sans-serif;
+    font-weight: 600;
+  }
+  .mdsm-devices p {
+    text-align: center;
+    font-size: 30px;
+    color: rgb(178, 184, 185);
+  }
+
+  .md-btn {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding: 0 2.5em;
+  }
+
+  .login-btn {
+    padding: 1em;
+    background-color: #33658a;
+    color: #fff;
+    border: none;
+    margin-bottom: 25px;
+    font-family: "Roboto Condensed", sans-serif;
+    font-size: 15px;
+    letter-spacing: 5px;
+    text-decoration: none;
+    text-align: center;
+    /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
+  }
+
+  .register-btn {
+    padding: 1em;
+    background-color: #fff;
+    color: #33658a;
+    border: 2px solid #33658a;
+    margin-bottom: 25px;
+    font-family: "Roboto Condensed", sans-serif;
+    font-size: 15px;
+    letter-spacing: 5px;
+    text-decoration: none;
+    text-align: center;
+  }
+}
+
+/*  Small Screen Laptop */
+@media only screen and (min-width: 769px) and (max-width: 1024px) {
+}
+
+/*  Desktop */
+@media only screen and (min-width: 1025px) and (max-width: 1200px) {
+  .mdsm-devices {
+    display: none;
+  }
+}
+
+/*  large  */
+@media only screen and (min-width: 1201px) {
+  .mdsm-devices {
+    display: none;
+  }
 }
 </style>

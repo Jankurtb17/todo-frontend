@@ -13,7 +13,7 @@
             <h1 class="main-text">Welcome</h1>
             <el-form>
               <el-row class="login-google">
-                <img src="@/assets/google.svg" class="google-icon" />
+                <img src="@/assets/GoogleIcon.svg" class="google-icon" />
                 <span>SIGN IN WITH GOOGLE</span>
               </el-row>
               <div class="group">

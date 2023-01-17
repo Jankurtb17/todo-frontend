@@ -54,7 +54,7 @@
         </el-row>
 
         <el-row justify="center" class="mdsm-devices">
-          <el-col :span="14">
+          <el-col :span="20">
             <div>
               <img src="@/assets/task.svg" class="img-sm" />
               <h1>Hello!</h1>
@@ -63,14 +63,14 @@
                 share your experiences
               </p>
             </div>
+            <div class="md-btn">
+              <router-link to="/login" class="login-btn">LOGIN</router-link>
+              <router-link to="/register" class="register-btn"
+                >REGISTER</router-link
+              >
+            </div>
           </el-col>
         </el-row>
-        <div class="md-btn">
-          <router-link to="/login" class="login-btn">LOGIN</router-link>
-          <router-link to="/register" class="register-btn"
-            >REGISTER</router-link
-          >
-        </div>
       </el-main>
     </el-container>
   </div>
@@ -187,6 +187,10 @@ const form = reactive({} as FormInput);
 }
 
 @media only screen and (min-width: 320px) and (max-width: 480px) {
+
+  .main-view {
+    overflow-y: hidden;
+  }
   .lg-devices {
     display: none;
   }

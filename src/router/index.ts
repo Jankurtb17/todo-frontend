@@ -17,6 +17,13 @@ const router = createRouter({
         Login: () => import('@/views/AppSmLogin.vue')
       }
     },
+    {
+      path: '/register',
+      name: 'md-register',
+      components: {
+        Login: () => import('@/views/AppSmRegister.vue')
+      }
+    },
   ]
 })
 

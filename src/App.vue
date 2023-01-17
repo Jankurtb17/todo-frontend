@@ -1,12 +1,14 @@
 <template>
-  <router-view name="Login" class="router-view" v-slot="{ Component, route }">
+  <!-- <router-view name="Login" class="router-view" v-slot="{ Component, route }">
     <Transition name="page-slide" mode="out-in">
       <div :key="route.name">
         <component :is="Component" />
       </div>
     </Transition>
-  </router-view>
+  </router-view> -->
   <router-view name="Content"></router-view>
+  <router-view name="Login"></router-view>
+  
 </template>
 
 <script setup lang="ts"></script>

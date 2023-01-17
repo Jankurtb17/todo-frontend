@@ -59,18 +59,18 @@
               <img src="@/assets/task.svg" class="img-sm" />
               <h1>Hello!</h1>
               <p>
-                Best place to log your task and <br />
+                Best place to log your task <br /> and 
                 share your experiences
               </p>
             </div>
-            <div class="md-btn">
-              <router-link to="/login" class="login-btn">LOGIN</router-link>
-              <router-link to="/register" class="register-btn"
-                >REGISTER</router-link
-              >
-            </div>
           </el-col>
         </el-row>
+        <div class="md-btn">
+          <router-link to="/login" class="login-btn">LOGIN</router-link>
+          <router-link to="/register" class="register-btn"
+            >REGISTER</router-link
+          >
+        </div>
       </el-main>
     </el-container>
   </div>
@@ -191,8 +191,14 @@ const form = reactive({} as FormInput);
     display: none;
   }
 
+  .mdsm-devices {
+    position: relative;
+    top: 10%;
+  }
+
   .img-sm {
     position: relative;
+    top: 20%;
   }
 
   .el-col {
@@ -200,7 +206,8 @@ const form = reactive({} as FormInput);
   }
 
   .mdsm-devices h1 {
-    font-size: 50px;
+    margin-top:50px;
+    font-size: 40px;
     text-align: center;
     letter-spacing: 5px;
     font-family: "Roboto", sans-serif;
@@ -208,8 +215,42 @@ const form = reactive({} as FormInput);
   }
   .mdsm-devices p {
     text-align: center;
-    font-size: 30px;
+    font-size: 18px;
     color: rgb(178, 184, 185);
+  }
+
+  .md-btn {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    flex-wrap: nowrap;
+  }
+
+  .login-btn {
+    padding: 1em;
+    background-color: #33658a;
+    color: #fff;
+    border: none;
+    margin-bottom: 25px;
+    font-family: "Roboto Condensed", sans-serif;
+    font-size: 15px;
+    letter-spacing: 5px;
+    text-decoration: none;
+    text-align: center;
+    /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
+  }
+
+  .register-btn {
+    padding: 1em;
+    background-color: #fff;
+    color: #33658a;
+    border: 2px solid #33658a;
+    margin-bottom: 25px;
+    font-family: "Roboto Condensed", sans-serif;
+    font-size: 15px;
+    letter-spacing: 5px;
+    text-decoration: none;
+    text-align: center;
   }
 }
 
@@ -264,6 +305,7 @@ const form = reactive({} as FormInput);
     text-decoration: none;
     text-align: center;
     /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
+    border-radius: 4px;
   }
 
   .register-btn {
@@ -277,6 +319,7 @@ const form = reactive({} as FormInput);
     letter-spacing: 5px;
     text-decoration: none;
     text-align: center;
+    border-radius: 4px;
   }
 }
 
@@ -289,11 +332,19 @@ const form = reactive({} as FormInput);
   .mdsm-devices {
     display: none;
   }
+
+  .md-btn {
+    display: none;
+  }
 }
 
 /*  large  */
 @media only screen and (min-width: 1201px) {
   .mdsm-devices {
+    display: none;
+  }
+
+  .md-btn {
     display: none;
   }
 }

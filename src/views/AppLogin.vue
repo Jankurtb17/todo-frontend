@@ -187,10 +187,10 @@ const form = reactive({} as FormInput);
 }
 
 @media only screen and (min-width: 320px) and (max-width: 480px) {
-
-  .main-view {
+  .el-main {
     overflow-y: hidden;
-  }
+    min-height: 90vh
+  }  
   .lg-devices {
     display: none;
   }
@@ -270,6 +270,7 @@ const form = reactive({} as FormInput);
 
   .el-col {
     border: none;
+    min-height: 100vh;
   }
 
   /* .mdsm-devices {

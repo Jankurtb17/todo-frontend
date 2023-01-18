@@ -23,7 +23,7 @@
                 type="password"
                 class="input-type"
                 size="large"
-                placeholder="Enter Email"
+                placeholder="Enter Password"
                 clearable
               />
               <button class="btn-login">LOGIN</button>
@@ -40,6 +40,11 @@
             <el-row class="login-google">
               <img src="@/assets/GoogleIcon.svg" class="google-icon" />
               <span class="text-login-google">SIGN IN WITH GOOGLE</span>
+            </el-row>
+            <el-row class="register-link">
+              <el-col>
+                <span>Don't have an account? Register <router-link to="/register">here</router-link></span>
+              </el-col>
             </el-row>
           </el-form>
         </div>
@@ -67,11 +72,11 @@ const redirectToHome = () => {
 @media only screen and (min-width: 320px) and (max-width: 480px) {
   .icon {
     font-size: 50px;
-    margin-top: 20px;
+    margin-top: 10px;
   }
 
   .sm-login {
-    padding: 1em 0.5em;
+    padding: 0 0.5em;
   }
 
   h1 {
@@ -166,6 +171,11 @@ const redirectToHome = () => {
   .google-icon {
     margin-right: 5px;
     font-size: 18px;
+  }
+
+  .register-link {
+    text-align: center;
+    margin-top: 35px;
   }
 }
 </style>

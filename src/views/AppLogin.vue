@@ -54,7 +54,7 @@
         </el-row>
 
         <el-row justify="center" class="mdsm-devices">
-          <el-col :span="20">
+          <el-col :span="16">
             <div>
               <img src="@/assets/task.svg" class="img-sm" />
               <h1>Hello!</h1>
@@ -186,10 +186,15 @@ const form = reactive({} as FormInput);
   padding-top: 20px;
 }
 
+/* Phone */
 @media only screen and (min-width: 320px) and (max-width: 480px) {
   .el-main {
+    position: relative;
+    top: -4.5em;
+  }
+  .el-main {
     overflow-y: hidden;
-    min-height: 90vh
+    min-height: 95vh
   }  
   .lg-devices {
     display: none;
@@ -259,7 +264,8 @@ const form = reactive({} as FormInput);
 }
 
 /*  Tablet */
-@media only screen and (min-width: 481px) and (max-width: 780px) {
+@media only screen and (min-width: 481px) and (max-width: 820px) {
+  
   .lg-devices {
     display: none;
   }
@@ -270,7 +276,7 @@ const form = reactive({} as FormInput);
 
   .el-col {
     border: none;
-    min-height: 100vh;
+    min-height: 90vh;
   }
 
   /* .mdsm-devices {
@@ -329,7 +335,7 @@ const form = reactive({} as FormInput);
 }
 
 /*  Small Screen Laptop */
-@media only screen and (min-width: 769px) and (max-width: 1024px) {
+@media only screen and (min-width: 821px) and (max-width: 1024px) {
 }
 
 /*  Desktop */

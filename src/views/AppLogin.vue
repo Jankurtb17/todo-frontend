@@ -36,7 +36,7 @@
                   clearable
                 />
               </div>
-              <el-button style="width: 100%" class="btn btn-login"
+              <el-button style="width: 100%" class="btn btn-login" @click="userLogin"
                 >Sign In</el-button
               >
 
@@ -53,6 +53,7 @@
           </el-col>
         </el-row>
 
+        <!-- SM and MD Device -->
         <el-row justify="center" class="mdsm-devices">
           <el-col :span="16">
             <div>
@@ -79,13 +80,19 @@
 <script lang="ts" setup>
 import BaseInput from "@/components/BaseInput.vue";
 import { ref, reactive } from "vue";
+import { useRouter } from "vue-router";
 defineProps(["class"]);
+const router = useRouter()
 type FormInput = {
   email: string;
   password: string;
 };
 
 const form = reactive({} as FormInput);
+
+const userLogin = () => {
+  router.push('/home')
+}
 </script>
 
 <style scoped>

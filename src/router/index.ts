@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory, viewDepthKey } from 'vue-router'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -23,6 +23,30 @@ const router = createRouter({
       components: {
         Login: () => import('@/views/AppSmRegister.vue')
       }
+    },
+    {
+      path: "/",
+      components: {
+        Content: () => import('@/components/BaseLayout.vue')
+      },
+      children: [
+        {
+          path: '/home',
+          component: () => import('@/views/AppHome.vue')
+        },
+        {
+          path: '/dashboard',
+          component: () => import('@/views/AppDashboard.vue')
+        },
+        {
+          path: '/task',
+          component: () => import('@/views/AppTask.vue')
+        },
+        {
+          path: '/profile',
+          component: () => import('@/views/AppProfile.vue')
+        }
+      ]
     },
   ]
 })

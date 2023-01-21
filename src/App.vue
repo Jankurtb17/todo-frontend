@@ -12,6 +12,10 @@
 
 <script setup lang="ts"></script>
 <style scoped>
+body {
+  height: 100vh;
+  overflow-y: hidden;
+}
 .page-slide-enter-active,
 .page-slide-leave-active {
   transition: 600ms ease all;

@@ -59,6 +59,11 @@ import {
   SuccessFilled,
   Back,
   ArrowDown,
+  Expand,
+  Fold,
+  Memo,
+  Menu,
+  SwitchButton
 } from "@element-plus/icons-vue";
 
 export default (app: App): void => {
@@ -119,4 +124,9 @@ export default (app: App): void => {
     .component("SuccessFilled", SuccessFilled)
     .component("Back", Back)
     .component("ArrowDown", ArrowDown)
+    .component("Expand", Expand)
+    .component("Fold", Fold)
+    .component("Memo", Memo)
+    .component("Menu", Menu)
+    .component("SwitchButton", SwitchButton)
 }

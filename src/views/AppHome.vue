@@ -5,6 +5,5 @@
 </template>
 
 <script lang="ts" setup>
-import AppMenu from "@/components/AppMenu.vue"
 </script>
 

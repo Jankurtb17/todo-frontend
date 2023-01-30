@@ -10,9 +10,7 @@
             <div class="route-links">
               <ul>
                   <router-link to="/dashboard"><el-icon class="sidebar-icon" :size="20"><Menu /></el-icon> Dashboard</router-link>
-              
                   <router-link to="/task"> <el-icon class="sidebar-icon" :size="20"><Memo /></el-icon> Task List </router-link>
-              
                   <router-link to="/profile"> <el-icon class="sidebar-icon" :size="20"><UserFilled /></el-icon> Profile</router-link>
               </ul>
             </div>
@@ -26,9 +24,6 @@
       </el-row>
     </el-aside>
     <el-container>
-      <el-header>
-        <el-icon class="icon" @click="foldMenu"><Fold /></el-icon>
-      </el-header>
       <el-main>
         <router-view />
       </el-main>
@@ -36,14 +31,14 @@
   </el-container>
 </template>
 <script lang="ts" setup>
-import AppMenu from "@/components/AppMenu.vue";
+import AppNavbar from "@/components/AppNavbar.vue";
 import { SwitchButton, UserFilled } from "@element-plus/icons-vue";
 import { ref } from "vue";
 const isClicked = ref(false);
 const foldMenu = () => {
   isClicked.value = !isClicked.value;
 };
-
+const isLoading = ref(false)
 const menus = ref([
   {
     name: "Dashboard",
@@ -64,6 +59,7 @@ const menus = ref([
 <style scoped>
 header.el-header {
   border-bottom: 1px solid lightgray;
+  height: 9%;
 }
 
 .icon {
@@ -122,7 +118,6 @@ a {
   background-color: #5586ef;
   color: #f2f6ff;
 }
-
 
 .route-logout {
   flex-grow: 5;

@@ -38,7 +38,8 @@ import {
   ElDropdownMenu,
   ElDropdownItem,
   ElPageHeader,
-  ElPagination
+  ElPagination,
+  ElProgress
 } from "element-plus";
 
 import {
@@ -63,7 +64,9 @@ import {
   Fold,
   Memo,
   Menu,
-  SwitchButton
+  SwitchButton,
+  ArrowLeft,
+  ArrowRight
 } from "@element-plus/icons-vue";
 
 export default (app: App): void => {
@@ -106,6 +109,7 @@ export default (app: App): void => {
     .use(ElDropdownItem)
     .use(ElPageHeader)
     .use(ElPagination)
+    .use(ElProgress)
     .component("el-icon-zoomin", ZoomIn)
     .component("Edit", Edit)
     .component("Delete", Delete)
@@ -129,4 +133,6 @@ export default (app: App): void => {
     .component("Memo", Memo)
     .component("Menu", Menu)
     .component("SwitchButton", SwitchButton)
+    .component("ArrowLeft", ArrowLeft)
+    .component("ArrowRight", ArrowRight)
 }

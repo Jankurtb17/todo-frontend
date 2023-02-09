@@ -37,9 +37,101 @@
       </div>
     </div>
 
-    <div class="grid-2"></div>
+    <div class="grid-2">
+      <h2>Overall Progress</h2>
+      <div class="progress">
+        <el-progress type="circle" :percentage="20" status="success" :stroke-width="20" :width="300">
+          <template #default="{ percentage }">
+            <span class="percentage-value">{{ percentage }}%</span> <br/>
+            <span class="percentage-label">Task finished</span>
+          </template>
+        </el-progress>
+      </div>
+      <div class="date">
+        <div>
+          <span>{{ getMonth }} {{ year }}</span>
+        </div>
+        <div>
+          <el-icon><ArrowLeft /></el-icon>
+          <el-icon><ArrowRight /></el-icon>
+        </div>
+      </div>
+      <div class="days">
+        <div v-for="week in weeks" :key="week" class="days-item">
+          <span>{{ week }}</span>
+        </div>
+        
+      </div>
+      <div class="dates">
+        <div v-for="(days, index) in daysOfTheWeek" :key="index" class="days-item">
+          <span >{{ days }} </span>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
+
+<script lang="ts" setup>
+import { ref, computed } from 'vue';
+const getDate = new Date();
+const month = getDate.getUTCMonth() + 1;
+const year = getDate.getFullYear()
+const getMonth = ref("")
+const curr = new Date; // get current date
+const first = curr.getDate() 
+const firstday = (new Date(curr.setDate(first+1))).toString();
+const daysOfTheWeek = ref<Array<string>>([])
+const isActive = ref(false)
+for(let i = 0; i < 7; i++) {
+   const next = new Date(curr.getTime());
+   next.setDate(first+i);
+   if(curr.getDate() === next.getDate()) {
+    isActive.value = true;
+   } 
+   daysOfTheWeek.value.push(next.getDate())
+}
+const weeks = ref([ "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"])
+switch (month) {
+  case 1:
+    getMonth.value = "Jan"
+    break;
+  case 2:
+    getMonth.value = "Feb"
+    break;
+  case 3:
+    getMonth.value = "Mar"
+    break;
+  case 4:
+    getMonth.value = "Apr"
+    break;
+  case 5:
+    getMonth.value = "May"
+    break;
+  case 6:
+    getMonth.value = "Jun"
+    break;
+  case 7:
+    getMonth.value = "Jul"
+    break;
+  case 8:
+    getMonth.value = "Aug"
+    break;
+  case 9:
+    getMonth.value = "Sep"
+    break;
+  case 10:
+    getMonth.value = "Oct"
+    break;
+  case 11:
+    getMonth.value = "Nov"
+    break;
+  case 12:
+    getMonth.value = "Dec"
+    break;
+  default:
+    break;
+}
+</script>
 
 <style scoped>
 .grid-1 {
@@ -111,7 +203,6 @@
 }
 
 .grid-2 {
-  border: 1px solid lightgray;
   margin-bottom: 1.5em;
 }
 
@@ -133,7 +224,54 @@
   padding: 10px;
 }
 
+.progress {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .material-symbols-sharp {
   font-size: 50px;
 }
+.percentage-label {
+  font-size: 20px;
+}
+
+.grid-2 h2 {
+  margin-left: 20px;
+}
+
+.date {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.date span {
+  font-size: 20px;
+  font-family: "Roboto", sans-serif;
+  font-weight: bold;
+}
+
+.days {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.dates {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.active {
+  background-color: red;
+}
+
 </style>

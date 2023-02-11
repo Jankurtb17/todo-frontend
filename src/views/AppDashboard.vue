@@ -29,118 +29,171 @@
         </div>
       </div>
 
-      <h3>Task Today</h3>
+      <h1 class="task-today">Task Today</h1>
       <div class="grid-row">
-        <div class="grid-row-item"></div>
-        <div class="grid-row-item"></div>
-        <div class="grid-row-item"></div>
+        <div class="grid-row-item">
+          <div class="memo">
+            <el-icon><Memo class="icon" /></el-icon>
+          </div>
+          <div class="start">
+            <span class="header">Start From</span>
+            <span class="text">09: 00am</span>
+          </div>
+          <div class="task-name">
+            <span class="header">Task Name</span>
+            <span class="text">Task Description</span>
+          </div>
+          <div class="time-remaining">
+            <span class="header">Time Remaining</span>
+            <span class="text">Task Description</span>
+          </div>
+        </div>
       </div>
     </div>
 
     <div class="grid-2">
       <h2>Overall Progress</h2>
       <div class="progress">
-        <el-progress type="circle" :percentage="20" status="success" :stroke-width="20" :width="300">
+        <el-progress
+          type="circle"
+          :percentage="20"
+          status="success"
+          :stroke-width="20"
+          :width="300"
+        >
           <template #default="{ percentage }">
-            <span class="percentage-value">{{ percentage }}%</span> <br/>
+            <span class="percentage-value">{{ percentage }}%</span> <br />
             <span class="percentage-label">Task finished</span>
           </template>
         </el-progress>
       </div>
-      <div class="date">
-        <div>
-          <span>{{ getMonth }} {{ year }}</span>
+      <div class="daysOfTheMonth">
+        <div class="monthAndYear">
+          <h1 class="currMonth">{{ monthName }} {{ year }}</h1>
+          <div class="arrow">
+            <el-icon @click="prevMonth"><ArrowLeft  /></el-icon>
+            <el-icon  @click="nextMonth"><ArrowRight/></el-icon>
+          </div>
         </div>
-        <div>
-          <el-icon><ArrowLeft /></el-icon>
-          <el-icon><ArrowRight /></el-icon>
-        </div>
-      </div>
-      <div class="days">
-        <div v-for="week in weeks" :key="week" class="days-item">
-          <span>{{ week }}</span>
-        </div>
-        
-      </div>
-      <div class="dates">
-        <div v-for="(days, index) in daysOfTheWeek" :key="index" class="days-item">
-          <span >{{ days }} </span>
-        </div>
+        <table>
+          <thead>
+            <tr>
+              <th v-for="day in weekDays" :key="day">
+                {{ day }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(week, index) in weeks" :key="index">
+              <td v-for="day in week" :key="day.date" :class="{ 'today': isToday(day.date) }">
+                {{ day.date }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from 'vue';
-const getDate = new Date();
-const month = getDate.getUTCMonth() + 1;
-const year = getDate.getFullYear()
-const getMonth = ref("")
-const curr = new Date; // get current date
-const first = curr.getDate() 
-const firstday = (new Date(curr.setDate(first+1))).toString();
-const daysOfTheWeek = ref<Array<string>>([])
-const isActive = ref(false)
-for(let i = 0; i < 7; i++) {
-   const next = new Date(curr.getTime());
-   next.setDate(first+i);
-   if(curr.getDate() === next.getDate()) {
-    isActive.value = true;
-   } 
-   daysOfTheWeek.value.push(next.getDate())
+import { ArrowLeft } from "@element-plus/icons-vue";
+import { ref, computed } from "vue";
+let month = new Date().getMonth();
+let year = new Date().getFullYear();
+const today = new Date().getDate()
+const monthNames = ref<Array<string>>([
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+]);
+const daysInMonth = ref([31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]);
+const weekDays = ref<Array<string>>([
+  "Sun",
+  "Mon",
+  "Tue",
+  "Wed",
+  "Thu",
+  "Fri",
+  "Sat",
+]);
+
+const monthName = computed(() => {
+  return monthNames.value[month];
+});
+
+const weeks = computed(() => {
+  const firstDay = new Date(year, month, 1).getDay();
+  const lastDay = new Date(year, month, daysInMonth.value[month]).getDay();
+  const lastDate = daysInMonth.value[month];
+  const weeks = [];
+  let week = [];
+
+  for (let i = 1; i <= firstDay; i++) {
+    week.push({ date: "" });
+  }
+  for (let i = 1; i <= lastDate; i++) {
+    week.push({ date: i });
+    if (week.length === 7) {
+      weeks.push(week);
+      week = [];
+    }
+  }
+  for (let i = lastDay; i < 7; i++) {
+    week.push({ date: "" });
+  }
+  if (week.length) {
+    weeks.push(week);
+  }
+
+  return weeks;
+});
+
+const nextMonth = () => {
+  month++;
+  if (month > 11) {
+    month = 0;
+    year++;
+  }
+};
+
+const prevMonth = () => {
+  month--;
+  if (month < 0) {
+    month = 11;
+    year--;
+  }
+};
+
+const isToday = (date: any) => {
+  return date === today;
 }
-const weeks = ref([ "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"])
-switch (month) {
-  case 1:
-    getMonth.value = "Jan"
-    break;
-  case 2:
-    getMonth.value = "Feb"
-    break;
-  case 3:
-    getMonth.value = "Mar"
-    break;
-  case 4:
-    getMonth.value = "Apr"
-    break;
-  case 5:
-    getMonth.value = "May"
-    break;
-  case 6:
-    getMonth.value = "Jun"
-    break;
-  case 7:
-    getMonth.value = "Jul"
-    break;
-  case 8:
-    getMonth.value = "Aug"
-    break;
-  case 9:
-    getMonth.value = "Sep"
-    break;
-  case 10:
-    getMonth.value = "Oct"
-    break;
-  case 11:
-    getMonth.value = "Nov"
-    break;
-  case 12:
-    getMonth.value = "Dec"
-    break;
-  default:
-    break;
-}
+
 </script>
 
 <style scoped>
 .grid-1 {
   position: relative;
   top: -1.5em;
+  padding-left: 20px;
 }
 .welcome-text h1 {
   font-size: 50px;
   font-family: "Roboto Condensed", sans-serif;
+}
+
+.grid-1 .task-today {
+  font-size: 30px;
+  letter-spacing: 1px;
 }
 
 .welcome-text span {
@@ -153,6 +206,7 @@ switch (month) {
   grid-auto-columns: 2fr 1fr;
   grid-gap: 20px;
   grid-auto-flow: column;
+  column-gap: 20px;
 }
 
 .grid-cols {
@@ -168,6 +222,7 @@ switch (month) {
 
 .grid-item {
   border: 1px solid lightgray;
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
   height: 150px;
   border-radius: 10px;
   display: flex;
@@ -191,10 +246,38 @@ switch (month) {
 }
 
 .grid-row-item {
-  border: 1px solid lightgray;
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
   height: 150px;
-  border-radius: 4px;
+  border-radius: 10px;
+  display: grid;
+  grid-template-columns: 60px .5fr 2fr 1fr;
+  grid-auto-flow: columns;
+  padding: 15px;
 }
+
+.grid-row-item .header {
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.grid-row-item .text {
+  color: gray;
+}
+
+.memo {
+  display: flex;
+  align-items: center;
+  color: #5586ef;
+  font-size: 50px;
+}
+
+.task-name, .time-remaining, .start {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 
 .grid-row {
   display: grid;
@@ -203,7 +286,9 @@ switch (month) {
 }
 
 .grid-2 {
+  display: grid;
   margin-bottom: 1.5em;
+  gap: 20px;
 }
 
 .icon {
@@ -239,39 +324,47 @@ switch (month) {
 
 .grid-2 h2 {
   margin-left: 20px;
+  letter-spacing: 1.5px;
 }
 
-.date {
+.monthAndYear {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  padding: 10px;
-}
-
-.date span {
-  font-size: 20px;
-  font-family: "Roboto", sans-serif;
-  font-weight: bold;
-}
-
-.days {
-  margin-top: 20px;
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
-
-.dates {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  align-items: center;
-  justify-content: center;
-  text-align: center;
 }
 
 .active {
   background-color: red;
 }
 
+table {
+  width: 100%;
+  /* border-collapse: collapse; */
+}
+
+td,
+th {
+  padding: 20px;
+  text-align: center;
+}
+
+.daysOfTheMonth .currMonth {
+  padding-left: 20px;
+  font-size: 25px;
+  letter-spacing: 1.5px;
+}
+
+.arrow {
+  padding-right: 60px;
+}
+
+th {
+  color: gray;
+}
+
+.today {
+  background-color: rgb(19, 206, 102);
+  color: white;
+  border-radius: 50px;
+}
 </style>

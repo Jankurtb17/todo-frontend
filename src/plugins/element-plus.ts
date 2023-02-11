@@ -39,7 +39,10 @@ import {
   ElDropdownItem,
   ElPageHeader,
   ElPagination,
-  ElProgress
+  ElProgress,
+  ElCalendar,
+  ElTimeline,
+  ElTimelineItem,
 } from "element-plus";
 
 import {
@@ -110,6 +113,9 @@ export default (app: App): void => {
     .use(ElPageHeader)
     .use(ElPagination)
     .use(ElProgress)
+    .use(ElCalendar)
+    .use(ElTimeline)
+    .use(ElTimelineItem)
     .component("el-icon-zoomin", ZoomIn)
     .component("Edit", Edit)
     .component("Delete", Delete)

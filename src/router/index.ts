@@ -36,7 +36,10 @@ const router = createRouter({
         },
         {
           path: '/dashboard',
-          component: () => import('@/views/AppDashboard.vue')
+          component: () => import('@/views/AppDashboard.vue'),
+          meta: {
+            hasMain: true
+          }
         },
         {
           path: '/task',

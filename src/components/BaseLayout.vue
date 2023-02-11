@@ -125,4 +125,7 @@ a {
   flex-direction: column;
   justify-content: flex-end;
 }
+
+.el-main {
+}
 </style>

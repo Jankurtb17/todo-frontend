@@ -43,6 +43,9 @@ import {
   ElCalendar,
   ElTimeline,
   ElTimelineItem,
+  ElSelect,
+  ElTimePicker,
+  ElNotification
 } from "element-plus";
 
 import {
@@ -80,6 +83,7 @@ export default (app: App): void => {
     .use(ElContainer)
     .use(ElAside)
     .use(ElMain)
+    .use(ElTimePicker)
     .use(ElMenuItem)
     .use(ElSubMenu)
     .use(ElButton)
@@ -94,6 +98,7 @@ export default (app: App): void => {
     .use(ElTree)
     .use(ElTag)
     .use(ElTabs)
+    .use(ElNotification)
     .use(ElTabPane)
     .use(ElTooltip)
     .use(ElDatePicker)
@@ -116,6 +121,7 @@ export default (app: App): void => {
     .use(ElCalendar)
     .use(ElTimeline)
     .use(ElTimelineItem)
+    .use(ElSelect)
     .component("el-icon-zoomin", ZoomIn)
     .component("Edit", Edit)
     .component("Delete", Delete)

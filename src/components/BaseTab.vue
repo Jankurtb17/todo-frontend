@@ -15,6 +15,9 @@
     <el-tab-pane label="Work" name="fifth">
       <slot name="work"></slot>
     </el-tab-pane>
+    <el-tab-pane label="Completed" name="sixth">
+      <slot name="completed"></slot>
+    </el-tab-pane>
   </el-tabs>
 </template>
 

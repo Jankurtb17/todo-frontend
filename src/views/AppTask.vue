@@ -41,19 +41,25 @@
                 <el-button @click="closeDialog">Cancel</el-button>
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" class="submit" @click="submitForm"> Confirm </el-button>
+                <el-button type="primary" class="submit" @click="submitForm">
+                  Confirm
+                </el-button>
               </el-form-item>
             </div>
           </el-form>
         </template>
       </Modal>
     </div>
-    <div>
+    <div class="tabs">
       <BaseTab>
         <template #all>
-          <el-timeline>
-            <AllList />
-          </el-timeline>
+          <el-scrollbar height="80vh">
+            <div class="all" v-loading="status.isLoading">
+              <el-timeline>
+                <AllList />
+              </el-timeline>
+            </div>
+          </el-scrollbar>
         </template>
       </BaseTab>
     </div>
@@ -68,17 +74,23 @@ import Modal from "@/components/ModalDialog.vue";
 import { ref, reactive } from "vue";
 import type { FormType } from "@/utils/types";
 import type { FormInstance, FormRules } from "element-plus";
-import useTask from "@/composables/task";
+import useTask, { status } from "@/composables/task";
 import { message } from "@/utils/common";
-const { getTasks, postTask } = useTask();
+const { postTask } = useTask();
 const form = reactive({} as FormType);
 const ruleRefForm = ref<FormInstance>();
 const activeName = ref("All");
 const dialogVisible = ref(false);
+const getVal = ref();
 
 const closeDialog = (open) => {
-  open = false;
-}
+  // if (open === true) {
+  //   return true;
+  // } else {
+  //   return false;
+  // }
+  console.log(open);
+};
 const rules = ref<FormRules>({
   title: [
     {
@@ -133,13 +145,8 @@ const submitForm = () => {
   if (!ruleRefForm.value) return;
   ruleRefForm.value.validate(async (isValid) => {
     if (isValid) {
-      // const data = {
-      //   title: form.title,
-      //   description: form.description,
-      //   time: form.startTime,
-      //   type: form.type
-      // }
       await postTask(form);
+      console.log(form);
       message("Successfully Added", "success");
       dialogVisible.value = false;
     } else {
@@ -166,5 +173,9 @@ const submitForm = () => {
 
 .submit {
   margin-left: 5px;
+}
+
+.all {
+  padding: 20px 50px 20px 0;
 }
 </style>

@@ -1,24 +1,22 @@
 <template>
-  <el-timeline-item timestamp="2018/4/12" placement="top" v-loading="status.isLoading">
-    <el-card>
-      <h4>Update Github template</h4>
-      <p>Tom committed 2018/4/12 20:46</p>
-    </el-card>
-  </el-timeline-item>
-  <el-timeline-item timestamp="2018/4/3" placement="top">
-    <el-card>
-      <h4>Update Github template</h4>
-      <p>Tom committed 2018/4/3 20:46</p>
-    </el-card>
-  </el-timeline-item>
-  <el-timeline-item timestamp="2018/4/2" placement="top">
-    <el-card>
-      <h4>Update Github template</h4>
-      <p>Tom committed 2018/4/2 20:46</p>
-    </el-card>
-  </el-timeline-item>
+  <TimelineItem :arrTask="tasks" />
 </template>
 
 <script lang="ts" setup>
-import { status } from "@/composables/task"
+import type { FormType } from "@/utils/types";
+import TimelineItem from "@/components/TimelineItem.vue";
+import useTask from "@/composables/task";
+import { ref, onMounted } from "vue";
+const tasks = ref([] as FormType[]);
+const { getTasks, status } = useTask();
+
+const getData = async () => {
+  const data = await getTasks("all");
+  tasks.value.push(data);
+  console.log(tasks.value);
+};
+
+onMounted(() => {
+  getData();
+});
 </script>

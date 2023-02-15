@@ -13,12 +13,31 @@ export const status = reactive({} as Status)
 const useTask = () => {
   const taskApi = TaskService;
 
-  const getTasks = async () => {
+  const getTasks = async (type?: string) => {
     status.isLoading = true
     const task = await taskApi
     .getTasksApi()
     .then((response) => {
-      return response.data
+      const result = [];
+       if (type === "today") {
+        const item = response.data.filter((item:any) => item.type === type)
+        result.push(item)
+        return result;
+      }
+      else if (type === "work") {
+        const item = response.data.filter((item:any) => item.type === type)
+        result.push(item)
+        return result;
+      }
+      else if (type === "personal") {
+        const item = response.data.filter((item:any) => item.type === type)
+        result.push(item)
+        return result;
+      } else {
+        result.push(response.data)
+        return result;
+      }
+      
     })
     .catch((error) => {
       throw error;

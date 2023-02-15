@@ -6,9 +6,6 @@
     <el-tab-pane label="Today" name="second">
       <slot name="today"></slot>
     </el-tab-pane>
-    <el-tab-pane label="Week" name="third">
-      <slot name="week"></slot>
-    </el-tab-pane>
     <el-tab-pane label="Personal" name="fourth">
       <slot name="personal"></slot>
     </el-tab-pane>
@@ -22,6 +19,6 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
-const activeName = ref('All')
+import { ref } from "vue";
+const activeName = ref("All");
 </script>

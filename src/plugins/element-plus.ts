@@ -45,7 +45,8 @@ import {
   ElTimelineItem,
   ElSelect,
   ElTimePicker,
-  ElNotification
+  ElNotification,
+  ElEmpty
 } from "element-plus";
 
 import {
@@ -72,7 +73,8 @@ import {
   Menu,
   SwitchButton,
   ArrowLeft,
-  ArrowRight
+  ArrowRight,
+  CircleCheck
 } from "@element-plus/icons-vue";
 
 export default (app: App): void => {
@@ -90,6 +92,7 @@ export default (app: App): void => {
     .use(ElForm)
     .use(ElFormItem)
     .use(ElTable)
+    .use(ElEmpty)
     .use(ElTableColumn)
     .use(ElCard)
     .use(ElInput)
@@ -138,6 +141,7 @@ export default (app: App): void => {
     .component("CirclePlus", CirclePlus)
     .component("CicleCloseFilled", CircleCloseFilled)
     .component("SuccessFilled", SuccessFilled)
+    .component("CircleCheck", CircleCheck)
     .component("Back", Back)
     .component("ArrowDown", ArrowDown)
     .component("Expand", Expand)

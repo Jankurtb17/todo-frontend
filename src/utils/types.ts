@@ -8,8 +8,8 @@ export interface TaskType {
 export interface FormType {
   title: string;
   description: string;
-  startTime: string;
+  start: string;
+  type: TaskType;
   author?: string;
   completed: boolean;
-  type: TaskType;
 }

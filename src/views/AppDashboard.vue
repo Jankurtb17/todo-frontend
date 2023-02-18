@@ -5,12 +5,15 @@
         <h1>Hello Jan Kurt</h1>
         <span>Welcome Back!</span>
       </div>
+      <h1>Overview</h1>
       <div class="grid-cols">
         <div class="grid-item">
-          <span class="material-symbols-sharp"> devices </span>
-          <div class="project-text">
-            <h2>Product Design</h2>
-            <span>11 project</span>
+          <div class="project-text todays">
+            <div>
+              <h2>Today</h2>
+              <p>11 project</p>
+            </div>
+            <div class="overview-img">asd</div>
           </div>
         </div>
         <div class="grid-item">
@@ -71,8 +74,8 @@
         <div class="monthAndYear">
           <h1 class="currMonth">{{ monthName }} {{ year }}</h1>
           <div class="arrow">
-            <el-icon @click="prevMonth"><ArrowLeft  /></el-icon>
-            <el-icon  @click="nextMonth"><ArrowRight/></el-icon>
+            <el-icon @click="prevMonth"><ArrowLeft /></el-icon>
+            <el-icon @click="nextMonth"><ArrowRight /></el-icon>
           </div>
         </div>
         <table>
@@ -85,7 +88,11 @@
           </thead>
           <tbody>
             <tr v-for="(week, index) in weeks" :key="index">
-              <td v-for="day in week" :key="day.date" :class="{ 'today': isToday(day.date) }">
+              <td
+                v-for="day in week"
+                :key="day.date"
+                :class="{ today: isToday(day.date) }"
+              >
                 {{ day.date }}
               </td>
             </tr>
@@ -101,7 +108,7 @@ import { ArrowLeft } from "@element-plus/icons-vue";
 import { ref, computed } from "vue";
 let month = new Date().getMonth();
 let year = new Date().getFullYear();
-const today = new Date().getDate()
+const today = new Date().getDate();
 const monthNames = ref<Array<string>>([
   "January",
   "February",
@@ -176,8 +183,7 @@ const prevMonth = () => {
 
 const isToday = (date: any) => {
   return date === today;
-}
-
+};
 </script>
 
 <style scoped>
@@ -215,7 +221,7 @@ const isToday = (date: any) => {
   grid-gap: 10px;
   grid-auto-flow: column;
 }
-/* 
+/*
 .grid-1 {
   grid-row: 2;
 } */
@@ -225,12 +231,12 @@ const isToday = (date: any) => {
   box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
   height: 150px;
   border-radius: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  /* display: flex; */
+  /* justify-content: center;
+  align-items: center; */
 }
 
-.grid-item:nth-child(1) {
+/* .grid-item:nth-child(1) {
   background-color: #282047;
   color: #f2f6ff;
 }
@@ -243,14 +249,14 @@ const isToday = (date: any) => {
 .grid-item:nth-child(3) {
   background-color: #5586ef;
   color: #f2f6ff;
-}
+} */
 
 .grid-row-item {
   box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
   height: 150px;
   border-radius: 10px;
   display: grid;
-  grid-template-columns: 60px .5fr 2fr 1fr;
+  grid-template-columns: 60px 0.5fr 2fr 1fr;
   grid-auto-flow: columns;
   padding: 15px;
 }
@@ -271,13 +277,14 @@ const isToday = (date: any) => {
   font-size: 50px;
 }
 
-.task-name, .time-remaining, .start {
+.task-name,
+.time-remaining,
+.start {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
-
 
 .grid-row {
   display: grid;
@@ -296,12 +303,17 @@ const isToday = (date: any) => {
   border: 1px solid white;
 }
 
-.project-text {
+/* .project-text {
   margin-left: 10px;
 }
 .project-text span {
   position: relative;
   top: -1em;
+} */
+
+.project-text {
+  display: flex;
+  justify-content: space-between;
 }
 
 .grid-item img {
@@ -366,5 +378,13 @@ th {
   background-color: rgb(19, 206, 102);
   color: white;
   border-radius: 50px;
+}
+
+.overview-img {
+  background-image: url("../assets/Ellipse.png");
+  background-position: top right;
+  height: 10vh;
+  width: 56%;
+  background-size: cover;
 }
 </style>

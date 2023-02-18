@@ -19,17 +19,17 @@ const useTask = () => {
     .getTasksApi()
     .then((response) => {
       const result = [];
-       if (type === "today") {
+       if (type === "Today") {
         const item = response.data.filter((item:any) => item.type === type)
         result.push(item)
         return result;
       }
-      else if (type === "work") {
+      else if (type === "Work") {
         const item = response.data.filter((item:any) => item.type === type)
         result.push(item)
         return result;
       }
-      else if (type === "personal") {
+      else if (type === "Personal") {
         const item = response.data.filter((item:any) => item.type === type)
         result.push(item)
         return result;

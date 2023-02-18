@@ -1,5 +1,7 @@
 <template>
-  <TimelineItem :arrTask="tasks" />
+  <div v-if="tasks.length > 0">
+    <TimelineItem :arrTask="tasks" />
+  </div>
 </template>
 
 <script lang="ts" setup>

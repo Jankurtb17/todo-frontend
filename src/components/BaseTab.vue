@@ -1,8 +1,5 @@
 <template>
   <el-tabs v-model="activeName" class="demo-tabs">
-    <el-tab-pane label="All" style="" name="All">
-      <slot name="all"></slot>
-    </el-tab-pane>
     <el-tab-pane label="Today" name="second">
       <slot name="today"></slot>
     </el-tab-pane>
@@ -20,5 +17,5 @@
 
 <script lang="ts" setup>
 import { ref } from "vue";
-const activeName = ref("All");
+const activeName = ref("second");
 </script>

@@ -11,7 +11,8 @@ const tasks = ref([] as FormType[]);
 const { getTasks, status } = useTask();
 
 const getData = async () => {
-  tasks.value = await getTasks("today");
+  tasks.value = await getTasks("Today");
+  console.log(tasks.value);
 };
 
 onMounted(() => {

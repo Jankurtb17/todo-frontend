@@ -23,7 +23,7 @@
             <label>Time</label>
             <el-form-item>
               <el-time-picker
-                v-model="form.startTime"
+                v-model="form.start"
                 is-range
                 range-separator="To"
                 start-placeholder="Start time"
@@ -52,11 +52,29 @@
     </div>
     <div class="tabs">
       <BaseTab>
-        <template #all>
+        <template #today>
           <el-scrollbar height="80vh">
             <div class="all" v-loading="status.isLoading">
               <el-timeline>
-                <AllList />
+                <TodayList />
+              </el-timeline>
+            </div>
+          </el-scrollbar>
+        </template>
+        <template #personal>
+          <el-scrollbar height="80vh">
+            <div class="all" v-loading="status.isLoading">
+              <el-timeline>
+                <PersonalList />
+              </el-timeline>
+            </div>
+          </el-scrollbar>
+        </template>
+        <template #work>
+          <el-scrollbar height="80vh">
+            <div class="all" v-loading="status.isLoading">
+              <el-timeline>
+                <WorkList />
               </el-timeline>
             </div>
           </el-scrollbar>
@@ -69,6 +87,9 @@
 
 <script lang="ts" setup>
 import AllList from "@/views/TaskList/AllList.vue";
+import PersonalList from "@/views/TaskList/PersonalList.vue";
+import TodayList from "./TaskList/TodayList.vue";
+import WorkList from "./TaskList/WorkList.vue";
 import BaseTab from "@/components/BaseTab.vue";
 import Modal from "@/components/ModalDialog.vue";
 import { ref, reactive } from "vue";
@@ -150,7 +171,7 @@ const submitForm = () => {
       message("Successfully Added", "success");
       dialogVisible.value = false;
     } else {
-      message("Please double check the submitted form", "error");
+      message("Kindly check the required fields", "error");
     }
   });
 };

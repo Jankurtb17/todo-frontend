@@ -2,7 +2,7 @@
   <div class="grid">
     <div class="task">
       <h1>Task Activities</h1>
-      <Modal text="Create Task" type="primary" @dialogVisible="closeDialog">
+      <Modal text="Add Task" type="primary" @dialogVisible="closeDialog">
         <template #body>
           <el-form ref="ruleRefForm" :model="form" :rules="rules">
             <label>Name</label>

@@ -30,6 +30,7 @@ import {
   ElLoading,
   ElDescriptions,
   ElDialog,
+  ElSpace,
   ElSwitch,
   ElDivider,
   ElOption,
@@ -46,7 +47,9 @@ import {
   ElSelect,
   ElTimePicker,
   ElNotification,
-  ElEmpty
+  ElEmpty,
+  ElSkeleton,
+  ElSkeletonItem,
 } from "element-plus";
 
 import {
@@ -88,6 +91,7 @@ export default (app: App): void => {
     .use(ElTimePicker)
     .use(ElMenuItem)
     .use(ElSubMenu)
+    .use(ElSpace)
     .use(ElButton)
     .use(ElForm)
     .use(ElFormItem)
@@ -97,6 +101,8 @@ export default (app: App): void => {
     .use(ElCard)
     .use(ElInput)
     .use(ElMessage)
+    .use(ElSkeleton)
+    .use(ElSkeletonItem)
     .use(ElUpload)
     .use(ElTree)
     .use(ElTag)

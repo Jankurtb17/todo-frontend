@@ -1,6 +1,6 @@
 <template>
   <div v-for="tasks in props.arrTask" :key="tasks">
-    <div v-if="isCompleted">
+    <div v-if="!isCompleted">
       <el-timeline-item
         v-for="task in tasks"
         :key="task._id"
@@ -20,7 +20,7 @@
         </el-card>
       </el-timeline-item>
     </div>
-    <div>
+    <div v-else>
       <el-empty
         :image-size="200"
         description="You don't have any task today yay"
@@ -71,6 +71,4 @@ onMounted(() => {
 .check {
   cursor: pointer;
 }
-
-
 </style>

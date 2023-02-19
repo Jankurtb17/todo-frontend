@@ -3,55 +3,84 @@
     <div class="grid-1">
       <div class="welcome-text">
         <h1>Hello Jan Kurt</h1>
-        <span>Welcome Back!</span>
+        <span class="welcome">Welcome Back!</span>
       </div>
-      <h1>Overview</h1>
+      <h1 class="overview">Overview</h1>
       <div class="grid-cols">
         <div class="grid-item">
-          <div class="project-text todays">
-            <div>
-              <h2>Today</h2>
-              <p>11 project</p>
+          <div class="project-text">
+            <div class="today-icon">
+              <img src="../assets/sun.svg" />
             </div>
-            <div class="overview-img">asd</div>
+            <div class="today-text">
+              <h2>Today</h2>
+              <span>{{ taskToday.length }} task</span>
+            </div>
+          </div>
+          <div>
+            <el-progress :color="colors" :percentage="20" />
           </div>
         </div>
         <div class="grid-item">
-          <span class="material-symbols-sharp"> language </span>
           <div class="project-text">
-            <h2>Web Development</h2>
-            <span>11 project</span>
+            <div class="personal-icon">
+              <img src="../assets/boy.svg" />
+            </div>
+            <div class="personal-text">
+              <h2>Personal</h2>
+              <span>{{ taskPersonal.length }} task</span>
+            </div>
+          </div>
+          <div>
+            <el-progress :color="colors" :percentage="40" />
           </div>
         </div>
         <div class="grid-item">
-          <span class="material-symbols-sharp"> travel_explore </span>
           <div class="project-text">
-            <h2>Quality Assurance</h2>
-            <span>11 project</span>
+            <div class="work-icon">
+              <img src="../assets/work.svg" />
+            </div>
+            <div class="work-text">
+              <h2>Work</h2>
+              <span>{{ taskWork.length }} task</span>
+            </div>
+          </div>
+          <div>
+            <el-progress :color="colors" :percentage="80" />
           </div>
         </div>
       </div>
 
-      <h1 class="task-today">Task Today</h1>
-      <div class="grid-row">
-        <div class="grid-row-item">
-          <div class="memo">
-            <el-icon><Memo class="icon" /></el-icon>
-          </div>
-          <div class="start">
-            <span class="header">Start From</span>
-            <span class="text">09: 00am</span>
-          </div>
-          <div class="task-name">
-            <span class="header">Task Name</span>
-            <span class="text">Task Description</span>
-          </div>
-          <div class="time-remaining">
-            <span class="header">Time Remaining</span>
-            <span class="text">Task Description</span>
+      <div class="todays-task">
+        <h1 class="task-today">Task Today</h1>
+        <router-link to="/task">See All</router-link>
+      </div>
+      <div v-if="taskToday.length > 0">
+        <div class="grid-row" v-for="today in taskToday" :key="today">
+          <div
+            class="grid-row-item"
+            v-for="task in today.slice(0, 3)"
+            :key="task._id"
+          >
+            <div class="task-list">
+              <img src="../assets/list.svg" />
+            </div>
+            <div class="start">
+              <span class="header">Start From</span>
+              <span class="text">{{ task.start }}</span>
+            </div>
+            <div class="task-name">
+              <span class="header">Task Name</span>
+              <span class="text">{{ task.title }}</span>
+            </div>
+            <div class="time-remaining">
+              <span class="header">Time Remaining</span>
+              <span class="text">Task Description</span>
+            </div>
           </div>
         </div>
       </div>
+      <div v-else><BaseSkeleton /></div>
     </div>
 
     <div class="grid-2">
@@ -104,11 +133,17 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowLeft } from "@element-plus/icons-vue";
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
+import useTask from "@/composables/task";
+import BaseSkeleton from "@/components/BaseSkeleton.vue";
+import { colors } from "@/utils/common";
+const { getTasks, status } = useTask();
 let month = new Date().getMonth();
 let year = new Date().getFullYear();
 const today = new Date().getDate();
+const taskToday = ref([]);
+const taskPersonal = ref([]);
+const taskWork = ref([]);
 const monthNames = ref<Array<string>>([
   "January",
   "February",
@@ -184,6 +219,19 @@ const prevMonth = () => {
 const isToday = (date: any) => {
   return date === today;
 };
+
+const getData = async () => {
+  const today = await getTasks("Today");
+  const personal = await getTasks("Personal");
+  const work = await getTasks("Work");
+  taskToday.value = today;
+  taskPersonal.value = personal;
+  taskWork.value = work;
+};
+
+onMounted(() => {
+  getData();
+});
 </script>
 
 <style scoped>
@@ -197,15 +245,17 @@ const isToday = (date: any) => {
   font-family: "Roboto Condensed", sans-serif;
 }
 
-.grid-1 .task-today {
-  font-size: 30px;
-  letter-spacing: 1px;
+.grid-1 .task-today,
+.overview {
+  font-family: "Roboto";
+  color: #8c8c8c;
 }
 
 .welcome-text span {
-  font-size: 30px;
+  font-size: 25px;
   position: relative;
-  top: -1.1em;
+  top: -2em;
+  color: #8c8c8c;
 }
 .grid {
   display: grid;
@@ -221,42 +271,19 @@ const isToday = (date: any) => {
   grid-gap: 10px;
   grid-auto-flow: column;
 }
-/*
-.grid-1 {
-  grid-row: 2;
-} */
-
 .grid-item {
-  border: 1px solid lightgray;
   box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
   height: 150px;
   border-radius: 10px;
-  /* display: flex; */
-  /* justify-content: center;
-  align-items: center; */
+  padding-left: 20px;
 }
-
-/* .grid-item:nth-child(1) {
-  background-color: #282047;
-  color: #f2f6ff;
-}
-
-.grid-item:nth-child(2) {
-  background-color: #f78d35;
-  color: #f2f6ff;
-}
-
-.grid-item:nth-child(3) {
-  background-color: #5586ef;
-  color: #f2f6ff;
-} */
 
 .grid-row-item {
   box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
-  height: 150px;
+  height: 15vh;
   border-radius: 10px;
   display: grid;
-  grid-template-columns: 60px 0.5fr 2fr 1fr;
+  grid-template-columns: 1fr 0.5fr 2fr 1fr;
   grid-auto-flow: columns;
   padding: 15px;
 }
@@ -264,6 +291,18 @@ const isToday = (date: any) => {
 .grid-row-item .header {
   font-weight: bold;
   font-size: 20px;
+}
+
+.todays-task {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.todays-task a {
+  text-decoration: none;
+  color: #8c8c8c;
+  font-family: "Roboto";
 }
 
 .grid-row-item .text {
@@ -303,17 +342,57 @@ const isToday = (date: any) => {
   border: 1px solid white;
 }
 
-/* .project-text {
-  margin-left: 10px;
-}
-.project-text span {
-  position: relative;
-  top: -1em;
-} */
-
 .project-text {
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+  padding: 15px 0;
+}
+
+.today-icon {
+  background-color: #5d3891;
+  padding: 10px;
+  border-radius: 15px;
+  display: flex;
+  margin-right: 20px;
+  height: 6em;
+}
+
+.today-text span {
+  position: relative;
+  top: -15px;
+  color: #a9acad;
+}
+
+.personal-icon {
+  background-color: #f99417;
+  padding: 10px;
+  border-radius: 15px;
+  display: flex;
+  margin-right: 20px;
+  height: 6em;
+  fill: white;
+}
+
+.personal-text span {
+  position: relative;
+  top: -15px;
+  color: #a9acad;
+}
+
+.work-icon {
+  background-color: #e8e2e2;
+  padding: 10px;
+  border-radius: 15px;
+  display: flex;
+  margin-right: 20px;
+  height: 6em;
+  fill: white;
+}
+
+.work-text span {
+  position: relative;
+  top: -15px;
+  color: #a9acad;
 }
 
 .grid-item img {
@@ -332,6 +411,12 @@ const isToday = (date: any) => {
 }
 .percentage-label {
   font-size: 20px;
+}
+
+.task-list {
+  padding: 10px;
+  display: flex;
+  height: 7em;
 }
 
 .grid-2 h2 {
@@ -382,8 +467,7 @@ th {
 
 .overview-img {
   background-image: url("../assets/Ellipse.png");
-  background-position: top right;
-  height: 10vh;
+  background-position: bottom right;
   width: 56%;
   background-size: cover;
 }

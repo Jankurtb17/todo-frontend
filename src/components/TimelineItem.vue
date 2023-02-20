@@ -1,26 +1,19 @@
 <template>
-  <div v-for="tasks in props.arrTask" :key="tasks">
-    <div v-if="!isCompleted">
-      <el-timeline-item
-        v-for="task in tasks"
-        :key="task._id"
-        placement="top"
-        :timestamp="task.createdAt"
-      >
-        <el-card>
-          <div class="task-text">
-            <div>
-              <h4>{{ task.title }}</h4>
-              <p>{{ task.description }}</p>
-            </div>
-            <div class="task-check">
-              <check-circle-outline class="check" />
-            </div>
-          </div>
-        </el-card>
-      </el-timeline-item>
-    </div>
-    <div v-else>
+  <div>
+    <!-- <div v-if="!isCompleted"> -->
+    <el-card>
+      <div class="task-text">
+        <div>
+          <h4>{{ props?.task?.title }}</h4>
+          <p>{{ props?.task?.description }}</p>
+        </div>
+        <div class="task-check">
+          <check-circle-outline class="check" @click="updateTask(props.task)" />
+        </div>
+      </div>
+    </el-card>
+    <!-- </div> -->
+    <!-- <div v-else>
       <el-empty
         :image-size="200"
         description="You don't have any task today yay"
@@ -29,27 +22,37 @@
           <img src="../assets/task.png" />
         </template>
       </el-empty>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script lang="ts" setup>
 import { onMounted, computed, ref } from "vue";
 import type { FormType } from "@/utils/types";
+import useTask from "@/composables/task";
+import { notification } from "@/utils/common";
+const { putTask } = useTask();
 const props = defineProps({
   arrTask: Array,
+  task: Object,
 });
-const isCompleted = ref(false);
-const createdAt = ref("");
-const checkIsCompleted = () => {
-  props.arrTask?.forEach((item: any) => {
-    isCompleted.value = item.completed;
-  });
-};
+const emit = defineEmits<{
+  (e: "isUpdated", updated: boolean): boolean;
+}>();
 
-onMounted(() => {
-  checkIsCompleted();
-});
+const updateTask = async (task: any) => {
+  try {
+    emit("isUpdated", false);
+    const updateTask = {
+      ...task,
+      completed: true,
+    } as FormType;
+    await putTask(task._id, updateTask);
+    notification("Yayy you completed a task!", "success", "Success");
+  } catch (error) {
+    notification("Server error", "danger", "Failed");
+  }
+};
 </script>
 
 <style scoped>

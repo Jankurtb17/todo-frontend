@@ -1,5 +1,7 @@
 <template>
-  <TimelineItem :arrTask="tasks" />
+  <TimelineItem>
+    
+  </TimelineItem>
 </template>
 
 <script lang="ts" setup>

@@ -56,7 +56,7 @@
           <el-scrollbar height="80vh">
             <div class="all" v-loading="status.isLoading">
               <el-timeline>
-                <TodayList />
+                <TodayList ref="todayList" />
               </el-timeline>
             </div>
           </el-scrollbar>
@@ -92,7 +92,7 @@ import TodayList from "./TaskList/TodayList.vue";
 import WorkList from "./TaskList/WorkList.vue";
 import BaseTab from "@/components/BaseTab.vue";
 import Modal from "@/components/ModalDialog.vue";
-import { ref, reactive } from "vue";
+import { ref, reactive, onMounted } from "vue";
 import type { FormType } from "@/utils/types";
 import type { FormInstance, FormRules } from "element-plus";
 import useTask, { status } from "@/composables/task";
@@ -103,6 +103,7 @@ const ruleRefForm = ref<FormInstance>();
 const activeName = ref("All");
 const dialogVisible = ref(false);
 const getVal = ref();
+const today = ref();
 
 const closeDialog = (open) => {
   // if (open === true) {
@@ -175,6 +176,10 @@ const submitForm = () => {
     }
   });
 };
+
+// onMounted(() => {
+//   today.value.getData();
+// });
 </script>
 
 <style scoped>

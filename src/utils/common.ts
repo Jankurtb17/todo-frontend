@@ -1,4 +1,4 @@
-import { ElMessage } from "element-plus";
+import { ElMessage, ElNotification } from "element-plus";
 
 export const message = (message: string, type: string) => {
   switch (type) {
@@ -34,6 +34,42 @@ export const message = (message: string, type: string) => {
       break;
   }
 };
+
+export const notification = (message: string, type: string, title: string) => {
+  switch (type) {
+    case "success":
+       ElNotification({
+        message: message,
+        type: "success",
+        duration: 3000,
+      });
+      break;
+    case "warning":
+       ElNotification({ 
+        message: message,
+        type: "warning",
+        duration: 3000,
+      });
+      break;
+    case "info":
+       ElNotification({
+        message: message,
+        type: "info",
+        duration: 3000,
+      });
+      break;
+    case "error":
+       ElNotification({
+        message: message,
+        type: "error",
+        duration: 3000,
+      });
+      break;
+    default:
+      break;
+  }
+}
+
 
 export const colors = [
   { color: '#f56c6c', percentage: 20 },

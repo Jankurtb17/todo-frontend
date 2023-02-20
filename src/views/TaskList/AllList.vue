@@ -14,11 +14,14 @@ const { getTasks, status } = useTask();
 
 const getData = async () => {
   const data = await getTasks("all");
-  tasks.value.push(data);
-  console.log(tasks.value);
+  tasks.value.push(data as any);
 };
 
 onMounted(() => {
   getData();
+});
+
+defineExpose({
+  getData,
 });
 </script>

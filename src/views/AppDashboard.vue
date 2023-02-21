@@ -56,27 +56,25 @@
         <router-link to="/task">See All</router-link>
       </div>
       <div v-if="taskToday.length > 0">
-        <div class="grid-row" v-for="today in taskToday" :key="today">
-          <div
-            class="grid-row-item"
-            v-for="task in today.slice(0, 3)"
-            :key="task._id"
-          >
-            <div class="task-list">
-              <img src="../assets/list.svg" />
-            </div>
-            <div class="start">
-              <span class="header">Start From</span>
-              <span class="text">{{ task.start }}</span>
-            </div>
-            <div class="task-name">
-              <span class="header">Task Name</span>
-              <span class="text">{{ task.title }}</span>
-            </div>
-            <div class="time-remaining">
-              <span class="header">Time Remaining</span>
-              <span class="text">Task Description</span>
-            </div>
+        <div
+          class="grid-row-item"
+          v-for="task in taskToday.slice(0, 3)"
+          :key="task._id"
+        >
+          <div class="task-list">
+            <img src="../assets/list.svg" />
+          </div>
+          <div class="start">
+            <span class="header">Start From</span>
+            <span class="text">{{ task.start }}</span>
+          </div>
+          <div class="task-name">
+            <span class="header">Task Name</span>
+            <span class="text">{{ task.title }}</span>
+          </div>
+          <div class="time-remaining">
+            <span class="header">Time Remaining</span>
+            <span class="text">{{ task.description }}</span>
           </div>
         </div>
       </div>

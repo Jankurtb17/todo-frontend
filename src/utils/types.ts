@@ -6,10 +6,12 @@ export interface TaskType {
 }
 
 export interface FormType {
+  _id?: string;
   title: string;
   description: string;
   start: string;
   type: TaskType;
   author?: string;
   completed: boolean;
+  createdAt?: string;
 }

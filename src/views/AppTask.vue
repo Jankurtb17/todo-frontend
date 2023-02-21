@@ -100,17 +100,12 @@ import { message } from "@/utils/common";
 const { postTask } = useTask();
 const form = reactive({} as FormType);
 const ruleRefForm = ref<FormInstance>();
-const activeName = ref("All");
+const activeName = ref("All");  
 const dialogVisible = ref(false);
 const getVal = ref();
 const today = ref();
 
 const closeDialog = (open) => {
-  // if (open === true) {
-  //   return true;
-  // } else {
-  //   return false;
-  // }
   console.log(open);
 };
 const rules = ref<FormRules>({
@@ -176,10 +171,6 @@ const submitForm = () => {
     }
   });
 };
-
-// onMounted(() => {
-//   today.value.getData();
-// });
 </script>
 
 <style scoped>

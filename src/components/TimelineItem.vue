@@ -1,29 +1,16 @@
 <template>
-  <div>
-    <!-- <div v-if="!isCompleted"> -->
-    <el-card>
-      <div class="task-text">
-        <div>
-          <h4>{{ props?.task?.title }}</h4>
-          <p>{{ props?.task?.description }}</p>
-        </div>
-        <div class="task-check">
-          <check-circle-outline class="check" @click="updateTask(props.task)" />
-        </div>
+  <el-card>
+    <div class="task-text">
+      <div>
+        <h4>{{ props?.task?.title }}</h4>
+        <p>{{ props?.task?.description }}</p>
       </div>
-    </el-card>
-    <!-- </div> -->
-    <!-- <div v-else>
-      <el-empty
-        :image-size="200"
-        description="You don't have any task today yay"
-      >
-        <template #image>
-          <img src="../assets/task.png" />
-        </template>
-      </el-empty>
-    </div> -->
-  </div>
+      <div class="task-check">
+        <slot name="btn"> </slot>
+        <!-- <check-circle-outline class="check" @click="updateTask(props.task)" /> -->
+      </div>
+    </div>
+  </el-card>
 </template>
 
 <script lang="ts" setup>

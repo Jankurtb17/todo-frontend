@@ -1,0 +1,8 @@
+.calendar .el-calendar__header {
+}
+
+.calendar .el-calendar-table .el-calendar-day {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

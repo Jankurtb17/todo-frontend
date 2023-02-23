@@ -2,53 +2,21 @@
   <div class="grid">
     <div class="task">
       <h1>Task Activities</h1>
-      <Modal text="Add Task" type="primary" @dialogVisible="closeDialog">
-        <template #body>
-          <el-form ref="ruleRefForm" :model="form" :rules="rules">
-            <label>Name</label>
-            <el-form-item prop="title">
-              <el-input v-model="form.title" />
-            </el-form-item>
-            <label>Type</label>
-            <el-form-item prop="type">
-              <el-select style="width: 100%" v-model="form.type">
-                <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                />
-              </el-select>
-            </el-form-item>
-            <label>Time</label>
-            <el-form-item>
-              <el-time-picker
-                v-model="form.start"
-                is-range
-                range-separator="To"
-                start-placeholder="Start time"
-                end-placeholder="End time"
-                format="HH:mm"
-              />
-            </el-form-item>
-            <label>Description</label>
-            <el-form-item prop="description">
-              <el-input v-model="form.description" type="textarea" />
-            </el-form-item>
+      <el-button type="primary" @click="createDialogVisible" class="btn">
+        <el-icon class="circleplus"><CirclePlus /></el-icon> Add task
+      </el-button>
 
-            <div class="formBtn">
-              <el-form-item>
-                <el-button @click="closeDialog">Cancel</el-button>
-              </el-form-item>
-              <el-form-item>
-                <el-button type="primary" class="submit" @click="submitForm">
-                  Confirm
-                </el-button>
-              </el-form-item>
-            </div>
-          </el-form>
-        </template>
-      </Modal>
+      <el-dialog
+        v-model="dialogVisible"
+        :destroy-on-close="true"
+        title="Task"
+        width="30%"
+      >
+        <TaskForm
+          @closeDialog="createDialogVisible"
+          @cancelDialog="createDialogVisible"
+        />
+      </el-dialog>
     </div>
     <div class="tabs">
       <BaseTab>
@@ -86,90 +54,28 @@
 </template>
 
 <script lang="ts" setup>
-import AllList from "@/views/TaskList/AllList.vue";
 import PersonalList from "@/views/TaskList/PersonalList.vue";
 import TodayList from "./TaskList/TodayList.vue";
 import WorkList from "./TaskList/WorkList.vue";
 import BaseTab from "@/components/BaseTab.vue";
-import Modal from "@/components/ModalDialog.vue";
-import { ref, reactive, onMounted } from "vue";
-import type { FormType } from "@/utils/types";
-import type { FormInstance, FormRules } from "element-plus";
+import TaskForm from "@/components/TaskForm.vue";
+import { ElMessage } from "element-plus";
+import { ref } from "vue";
 import useTask, { status } from "@/composables/task";
-import { message } from "@/utils/common";
-const { postTask } = useTask();
-const form = reactive({} as FormType);
-const ruleRefForm = ref<FormInstance>();
-const activeName = ref("All");  
 const dialogVisible = ref(false);
-const getVal = ref();
-const today = ref();
+const todayList = ref();
 
-const closeDialog = (open) => {
-  console.log(open);
-};
-const rules = ref<FormRules>({
-  title: [
-    {
-      required: true,
-      message: "Please enter a task name",
-      trigger: "blur",
-    },
-  ],
-  type: [
-    {
-      required: true,
-      message: "Please enter a task type",
-      trigger: "change",
-    },
-  ],
-  time: [
-    {
-      required: true,
-      message: "Please enter a time",
-      trigger: "change",
-    },
-  ],
-  description: [
-    {
-      required: true,
-      message: "Please enter a description",
-      trigger: "blur",
-    },
-  ],
-});
-
-const options = ref([
-  {
-    value: "Personal",
-    label: "Personal",
-  },
-  {
-    value: "Week",
-    label: "Week",
-  },
-  {
-    value: "Today",
-    label: "Today",
-  },
-  {
-    value: "Work",
-    label: "Work",
-  },
-]);
-
-const submitForm = () => {
-  if (!ruleRefForm.value) return;
-  ruleRefForm.value.validate(async (isValid) => {
-    if (isValid) {
-      await postTask(form);
-      console.log(form);
-      message("Successfully Added", "success");
-      dialogVisible.value = false;
+const createDialogVisible = (cancel: string) => {
+  if (cancel === "cancel") {
+    return (dialogVisible.value = false);
+  } else {
+    if (dialogVisible.value === false) {
+      return (dialogVisible.value = true);
     } else {
-      message("Kindly check the required fields", "error");
+      todayList.value.getData();
+      return (dialogVisible.value = false);
     }
-  });
+  }
 };
 </script>
 
@@ -181,15 +87,6 @@ const submitForm = () => {
 
 .grid .task {
   font-size: 30px;
-}
-
-.formBtn {
-  display: flex;
-  justify-content: end;
-}
-
-.submit {
-  margin-left: 5px;
 }
 
 .all {

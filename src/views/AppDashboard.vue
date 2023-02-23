@@ -66,7 +66,7 @@
           </div>
           <div class="start">
             <span class="header">Start From</span>
-            <span class="text">{{ task.start }}</span>
+            <span class="text"></span>
           </div>
           <div class="task-name">
             <span class="header">Task Name</span>
@@ -74,7 +74,7 @@
           </div>
           <div class="time-remaining">
             <span class="header">Time Remaining</span>
-            <span class="text">{{ task.description }}</span>
+            <span class="text">{{}}</span>
           </div>
         </div>
       </div>
@@ -97,7 +97,17 @@
           </template>
         </el-progress>
       </div>
-      <div class="daysOfTheMonth">
+      <div>
+        <el-calendar
+          v-model="value"
+          class="calendar"
+          style="
+            --el-calendar-border: var(--el-table-border-none);
+            text-align: center;
+          "
+        />
+      </div>
+      <!-- <div class="daysOfTheMonth">
         <div class="monthAndYear">
           <h1 class="currMonth">{{ monthName }} {{ year }}</h1>
           <div class="arrow">
@@ -125,7 +135,7 @@
             </tr>
           </tbody>
         </table>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -142,6 +152,7 @@ const today = new Date().getDate();
 const taskToday = ref([]);
 const taskPersonal = ref([]);
 const taskWork = ref([]);
+const value = ref(new Date());
 const monthNames = ref<Array<string>>([
   "January",
   "February",
@@ -284,6 +295,7 @@ onMounted(() => {
   grid-template-columns: 1fr 0.5fr 2fr 1fr;
   grid-auto-flow: columns;
   padding: 15px;
+  margin-bottom: 10px;
 }
 
 .grid-row-item .header {

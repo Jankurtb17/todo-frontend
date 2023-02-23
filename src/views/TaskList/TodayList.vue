@@ -4,8 +4,9 @@
     :key="task._id"
     placement="top"
     :timestamp="task.createdAt"
+    color="#5d3891"
   >
-    <timeline-item :task="task">
+    <timeline-item :task="task" size="nornmal" color="#0bbd87">
       <template #btn>
         <check-circle-outline class="check" @click="updateTask(task)" />
       </template>
@@ -23,12 +24,10 @@ const tasks = ref([] as FormType[]);
 const { getTasks, status, putTask } = useTask();
 
 const getData = async () => {
-  const data = await getTasks("Today");
-  tasks.value.push(...data);
+  tasks.value = await getTasks("Today");
 };
 
 const updateTask = async (task: any) => {
-  console.log("clicked");
   const updateTask = {
     ...task,
     completed: true,
@@ -38,11 +37,24 @@ const updateTask = async (task: any) => {
   if (index !== -1) {
     tasks.value.splice(index, 1);
   }
-  console.log(tasks.value);
   notification("Yayy you completed a task!", "success", "Success");
 };
+
+defineExpose({
+  getData,
+});
 
 onMounted(() => {
   getData();
 });
 </script>
+
+<style>
+.check {
+  cursor: pointer;
+}
+
+.chech:hover {
+  color: green !important;
+}
+</style>

@@ -4,6 +4,7 @@
     :key="task._id"
     placement="top"
     :timestamp="task.createdAt"
+    color="#f99417"
   >
     <timeline-item :task="task">
       <template #btn>

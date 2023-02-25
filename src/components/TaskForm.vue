@@ -18,14 +18,27 @@
       </el-form-item>
       <label>Time</label>
       <el-form-item>
-        <el-time-picker
-          v-model="form.start"
-          is-range
-          range-separator="To"
-          start-placeholder="Start time"
-          end-placeholder="End time"
-          format="HH:mm"
-        />
+        <div>
+          <el-time-select
+            v-model="form.start"
+            :max-time="endTime"
+            class="mr-4"
+            placeholder="Start time"
+            start="08:30"
+            step="00:15"
+            end="18:30"
+            style="width: 50%;"
+          />
+          <el-time-select
+            v-model="endTime"
+            :min-time="form.end"
+            placeholder="End time"
+            start="08:30"
+            step="00:15"
+            end="18:30"
+            style="width: 50%"  
+          />
+        </div>
       </el-form-item>
       <label>Description</label>
       <el-form-item prop="description">
@@ -57,6 +70,8 @@ const { postTask } = useTask();
 const form = reactive({} as FormType);
 const ruleRefForm = ref<FormInstance>();
 const dialogVisible = ref(false);
+const startTime = ref('')
+const endTime = ref('')
 const emit = defineEmits<{
   (e: "closeDialog"): void;
   (e: "cancelDialog", cancel: string): void;
@@ -115,6 +130,7 @@ const submitForm = () => {
   if (!ruleRefForm.value) return;
   ruleRefForm.value.validate(async (isValid) => {
     if (isValid) {
+      form.completed = false;
       await postTask(form);
       ElMessage({
         message: "Successfully added",

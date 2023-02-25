@@ -20,21 +20,22 @@ const useTask = () => {
     .then((response) => {
       const result = [];
        if (type === "Today") {
-        const item = response.data.filter((item:any) => item.type === type).filter((item: any) => item.completed !== true)
+        const item = response.data.filter((item:any) => item.type === type)
         result.push(...item)
         return result;
       }
       else if (type === "Work") {
-        const item = response.data.filter((item:any) => item.type === type).filter((item: any) => item.completed !== true)
+        const item = response.data.filter((item:any) => item.type === type)
         result.push(...item)
         return result;
       }
       else if (type === "Personal") {
-        const item = response.data.filter((item:any) => item.type === type).filter((item: any) => item.completed !== true)
+        const item = response.data.filter((item:any) => item.type === type)
         result.push(...item)
         return result;
-      } else {
-        result.push(response.data)
+      } else if(type === "all") {
+        const item = response.data.filter((item: any) => item.completed === true)
+        result.push(...item)
         return result;
       }
       

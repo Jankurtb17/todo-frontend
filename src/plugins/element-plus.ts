@@ -50,6 +50,7 @@ import {
   ElEmpty,
   ElSkeleton,
   ElSkeletonItem,
+  ElTimeSelect,
 } from "element-plus";
 
 import {
@@ -85,6 +86,7 @@ export default (app: App): void => {
     .use(ElRow)
     .use(ElCol)
     .use(ElMenu)
+    .use(ElTimeSelect)
     .use(ElContainer)
     .use(ElAside)
     .use(ElMain)

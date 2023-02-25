@@ -22,7 +22,7 @@
       <BaseTab>
         <template #today>
           <el-scrollbar height="80vh">
-            <div class="all" v-loading="status.isLoading">
+            <div class="all" v-loading="status.isLoading" :spinner="customSpinner">
               <el-timeline>
                 <TodayList ref="todayList" />
               </el-timeline>
@@ -31,18 +31,27 @@
         </template>
         <template #personal>
           <el-scrollbar height="80vh">
-            <div class="all" v-loading="status.isLoading">
+            <div class="all" v-loading="status.isLoading" :spinner="customSpinner">
               <el-timeline>
-                <PersonalList />
+                <PersonalList ref="personalList"/>
               </el-timeline>
             </div>
           </el-scrollbar>
         </template>
         <template #work>
           <el-scrollbar height="80vh">
-            <div class="all" v-loading="status.isLoading">
+            <div class="all" v-loading="status.isLoading" :spinner="customSpinner">
               <el-timeline>
-                <WorkList />
+                <WorkList ref="workList" />
+              </el-timeline>
+            </div>
+          </el-scrollbar>
+        </template>
+        <template #completed>
+          <el-scrollbar height="80vh">
+            <div class="all" v-loading="status.isLoading" :spinner="customSpinner">
+              <el-timeline>
+                <CompletedTask ref="completedTask" />
               </el-timeline>
             </div>
           </el-scrollbar>
@@ -54,16 +63,20 @@
 </template>
 
 <script lang="ts" setup>
+import CustomSpinner from "@/components/CustomSpinner.vue";
 import PersonalList from "@/views/TaskList/PersonalList.vue";
 import TodayList from "./TaskList/TodayList.vue";
 import WorkList from "./TaskList/WorkList.vue";
 import BaseTab from "@/components/BaseTab.vue";
 import TaskForm from "@/components/TaskForm.vue";
-import { ElMessage } from "element-plus";
-import { ref } from "vue";
+import CompletedTask from "./TaskList/CompletedTask.vue"
+import { ref, computed } from "vue";
 import useTask, { status } from "@/composables/task";
 const dialogVisible = ref(false);
 const todayList = ref();
+const personalList = ref();
+const workList = ref();
+const completedTask = ref()
 
 const createDialogVisible = (cancel: string) => {
   if (cancel === "cancel") {
@@ -73,10 +86,17 @@ const createDialogVisible = (cancel: string) => {
       return (dialogVisible.value = true);
     } else {
       todayList.value.getData();
+      personalList.value.getData();
+      workList.value.getData();
+      completedTask.value.getData();
       return (dialogVisible.value = false);
     }
   }
 };
+
+const customSpinner = computed(() => {
+  return CustomSpinner;
+})
 </script>
 
 <style scoped>

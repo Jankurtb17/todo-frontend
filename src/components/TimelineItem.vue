@@ -4,6 +4,7 @@
       <div>
         <h4>{{ props?.task?.title }}</h4>
         <p>{{ props?.task?.description }}</p>
+        <p v-if="props?.type">{{ props?.task?.type }}</p>
       </div>
       <div class="task-check">
         <slot name="btn"> </slot>
@@ -22,6 +23,7 @@ const { putTask } = useTask();
 const props = defineProps({
   arrTask: Array,
   task: Object,
+  type: Boolean
 });
 const emit = defineEmits<{
   (e: "isUpdated", updated: boolean): boolean;

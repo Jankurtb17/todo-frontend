@@ -14,11 +14,11 @@
             </div>
             <div class="today-text">
               <h2>Today</h2>
-              <span>{{ taskToday.length }} task</span>
+              <span>{{ notCompleted }} task</span>
             </div>
           </div>
           <div>
-            <el-progress :color="colors" :percentage="20" />
+            <el-progress :color="colors" :percentage="result" />
           </div>
         </div>
         <div class="grid-item">
@@ -28,11 +28,11 @@
             </div>
             <div class="personal-text">
               <h2>Personal</h2>
-              <span>{{ taskPersonal.length }} task</span>
+              <span>{{ personalNotCompleted }} task</span>
             </div>
           </div>
           <div>
-            <el-progress :color="colors" :percentage="40" />
+            <el-progress :color="colors" :percentage="personalPercent" />
           </div>
         </div>
         <div class="grid-item">
@@ -42,11 +42,11 @@
             </div>
             <div class="work-text">
               <h2>Work</h2>
-              <span>{{ taskWork.length }} task</span>
+              <span>{{ workNotCompleted }} task</span>
             </div>
           </div>
           <div>
-            <el-progress :color="colors" :percentage="80" />
+            <el-progress :color="colors" :percentage="workPercent" />
           </div>
         </div>
       </div>
@@ -58,23 +58,23 @@
       <div v-if="taskToday.length > 0">
         <div
           class="grid-row-item"
-          v-for="task in taskToday.slice(0, 3)"
+          v-for="task in todayTaskNotCompleted.slice(0, 3)"
           :key="task._id"
         >
           <div class="task-list">
             <img src="../assets/list.svg" />
           </div>
-          <div class="start">
-            <span class="header">Start From</span>
-            <span class="text"></span>
-          </div>
           <div class="task-name">
-            <span class="header">Task Name</span>
+            <span class="header">Task name</span>
             <span class="text">{{ task.title }}</span>
           </div>
+          <div class="start">
+            <span class="header">Start time</span>
+            <span class="text"> {{ task.start }}</span>
+          </div>
           <div class="time-remaining">
-            <span class="header">Time Remaining</span>
-            <span class="text">{{}}</span>
+            <span class="header">End time</span>
+            <span class="text">{{ task.end }}</span>
           </div>
         </div>
       </div>
@@ -86,7 +86,7 @@
       <div class="progress">
         <el-progress
           type="circle"
-          :percentage="20"
+          :percentage="allPercent"
           status="success"
           :stroke-width="20"
           :width="300"
@@ -152,83 +152,15 @@ const today = new Date().getDate();
 const taskToday = ref([]);
 const taskPersonal = ref([]);
 const taskWork = ref([]);
+const notCompleted = ref(0);
+const workNotCompleted = ref(0);
+const workPercent = ref();
+const personalPercent = ref();
+const personalNotCompleted = ref(0);
 const value = ref(new Date());
-const monthNames = ref<Array<string>>([
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-]);
-const daysInMonth = ref([31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]);
-const weekDays = ref<Array<string>>([
-  "Sun",
-  "Mon",
-  "Tue",
-  "Wed",
-  "Thu",
-  "Fri",
-  "Sat",
-]);
-
-const monthName = computed(() => {
-  return monthNames.value[month];
-});
-
-const weeks = computed(() => {
-  const firstDay = new Date(year, month, 1).getDay();
-  const lastDay = new Date(year, month, daysInMonth.value[month]).getDay();
-  const lastDate = daysInMonth.value[month];
-  const weeks = [];
-  let week = [];
-
-  for (let i = 1; i <= firstDay; i++) {
-    week.push({ date: "" });
-  }
-  for (let i = 1; i <= lastDate; i++) {
-    week.push({ date: i });
-    if (week.length === 7) {
-      weeks.push(week);
-      week = [];
-    }
-  }
-  for (let i = lastDay; i < 7; i++) {
-    week.push({ date: "" });
-  }
-  if (week.length) {
-    weeks.push(week);
-  }
-
-  return weeks;
-});
-
-const nextMonth = () => {
-  month++;
-  if (month > 11) {
-    month = 0;
-    year++;
-  }
-};
-
-const prevMonth = () => {
-  month--;
-  if (month < 0) {
-    month = 11;
-    year--;
-  }
-};
-
-const isToday = (date: any) => {
-  return date === today;
-};
-
+const result = ref();
+const todayTaskNotCompleted = ref([])
+const allPercent = ref()
 const getData = async () => {
   const today = await getTasks("Today");
   const personal = await getTasks("Personal");
@@ -236,6 +168,28 @@ const getData = async () => {
   taskToday.value = today;
   taskPersonal.value = personal;
   taskWork.value = work;
+  
+  todayTaskNotCompleted.value = taskToday.value.filter((item) => item.completed !== true)
+  // task today length
+  notCompleted.value = taskToday.value.filter((item) => item.completed !== true ).length;
+  const completed = taskToday.value.filter((item) => item.completed === true).length;
+  result.value = Number(((completed / taskToday.value.length) * 100).toFixed(0));
+
+  //personal length
+  personalNotCompleted.value = taskPersonal.value.filter((item) => item.completed !== true).length;
+  const personalCompleted = taskPersonal.value.filter((item) => item.completed === true).length;
+  personalPercent.value = Number(((personalCompleted / taskPersonal.value.length) * 100).toFixed(0)); 
+  
+  //work length
+  workNotCompleted.value = taskWork.value.filter((item) => item.completed !== true).length;
+  const workCompleted = taskWork.value.filter((item) => item.completed === true).length;
+  workPercent.value = Number(((workCompleted / taskWork.value.length) * 100).toFixed(0));
+
+  //overall progress
+  const progress = personalCompleted + workCompleted + completed
+  const allTaskLength = taskToday.value.length + taskPersonal.value.length + taskWork.value.length
+  allPercent.value = Number(((progress / allTaskLength ) * 100).toFixed(0))
+  console.log(taskToday.value)
 };
 
 onMounted(() => {

@@ -4,11 +4,11 @@
     :key="task._id"
     placement="top"
     :timestamp="task.createdAt"
-    color="#f99417"
+    :color="getColor(task.type)"
   >
-    <timeline-item :task="task" size="nornmal" color="#0bbd87">
+    <timeline-item :type="true" :task="task" size="nornmal" color="#0bbd87">
       <template #btn>
-        <check-circle-outline class="check" @click="updateTask(task)" />
+        <check-circle-outline class="check"/>
       </template>
     </timeline-item>
   </el-timeline-item>
@@ -18,28 +18,27 @@
 import type { FormType } from "@/utils/types";
 import TimelineItem from "@/components/TimelineItem.vue";
 import useTask from "@/composables/task";
-import { ref, onMounted, watchEffect } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { notification } from "@/utils/common";
 const tasks = ref([] as FormType[]);
 const { getTasks, status, putTask } = useTask();
 
 const getData = async () => {
-  tasks.value = await getTasks("Personal");
-  tasks.value = tasks.value.filter((item) => item.completed !== true)
+  const data = await getTasks("all");
+  tasks.value.push(...data)
 };
 
-const updateTask = async (task: any) => {
-  const updateTask = {
-    ...task,
-    completed: true,
-  } as FormType;
-  await putTask(task._id, updateTask);
-  const index = tasks.value.findIndex((item) => item._id === updateTask._id);
-  if (index !== -1) {
-    tasks.value.splice(index, 1);
+const getColor = (type: string): string => {
+  let color = ""
+  if(type === "Personal") {
+    return color = "#f99417"
+  } else if(type === "Today") {
+    return color = "#5d3891" 
+  } else if (type === "Work") {
+    return color = "#e8e2e2"
   }
-  notification("Yayy you completed a task!", "success", "Success");
-};
+  return color;
+}
 
 defineExpose({
   getData,

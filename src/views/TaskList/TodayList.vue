@@ -25,6 +25,7 @@ const { getTasks, status, putTask } = useTask();
 
 const getData = async () => {
   tasks.value = await getTasks("Today");
+  tasks.value = tasks.value.filter((item) => item.completed !== true)
 };
 
 const updateTask = async (task: any) => {
@@ -32,7 +33,7 @@ const updateTask = async (task: any) => {
     ...task,
     completed: true,
   } as FormType;
-  const data = await putTask(task._id, updateTask);
+  await putTask(task._id, updateTask);
   const index = tasks.value.findIndex((item) => item._id === updateTask._id);
   if (index !== -1) {
     tasks.value.splice(index, 1);

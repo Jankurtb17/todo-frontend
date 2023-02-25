@@ -10,6 +10,7 @@ export interface FormType {
   title: string;
   description: string;
   start: string;
+  end: string;
   type: TaskType;
   author?: string;
   completed: boolean;

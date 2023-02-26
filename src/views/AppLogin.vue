@@ -12,7 +12,7 @@
           >
             <h1 class="main-text">Welcome</h1>
             <el-form>
-              <el-row class="login-google">
+              <el-row class="login-google" @click="signInWithGoogle">
                 <img src="@/assets/GoogleIcon.svg" class="google-icon" />
                 <span>SIGN IN WITH GOOGLE</span>
               </el-row>
@@ -23,20 +23,20 @@
               </div>
               <div>
                 <BaseInput
-                  v-model="form.email"
+                  v-model="login.email"
                   placeholder="Enter email"
                   clearable
                   style="height: 45px"
                 />
                 <BaseInput
-                  v-model="form.password"
+                  v-model="login.password"
                   placeholder="Enter password"
                   type="password"
                   style="height: 45px"
                   clearable
                 />
               </div>
-              <el-button style="width: 100%" class="btn btn-login" @click="userLogin"
+              <el-button style="width: 100%" class="btn btn-login" @click="loginUser"
                 >Sign In</el-button
               >
 
@@ -79,19 +79,79 @@
 
 <script lang="ts" setup>
 import BaseInput from "@/components/BaseInput.vue";
-import { ref, reactive } from "vue";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
-defineProps(["class"]);
+import { getAuth, signInWithEmailAndPassword,GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import useUserStore from "@/stores/user";
+const store = useUserStore();
 const router = useRouter()
-type FormInput = {
-  email: string;
-  password: string;
-};
-
-const form = reactive({} as FormInput);
-
-const userLogin = () => {
-  router.push('/home')
+const errorEmail = ref(false);
+const errorPassword = ref(false);
+const errMessage = ref();
+type SignIn = {
+  email: string,
+  password: string
+}
+let login = ref<SignIn>({
+  email: "",
+  password: ""
+})
+const loginUser = () => {
+  const auth = getAuth()
+  signInWithEmailAndPassword(auth, login.value.email, login.value.password)
+  .then(() => {
+    router.push("/dashboard")
+  })
+  .catch((error) => {
+    if(login.value.email !== "" && login.value.password !== "") {
+      switch(error.code) {
+        case "auth/invalid-email":
+          errMessage.value = "Please enter a valid email address";
+          errorEmail.value = true;
+          break;
+        case "auth/user-not-found":
+          errMessage.value = "No account with that email was found";
+          errorEmail.value = true;
+          break;
+        case "auth/wrong-password":
+          errMessage.value = "Password is incorrect";
+          errorPassword.value = true
+          break;
+        default:
+          errMessage.value = "Email or password is incorrect"
+          errorEmail.value = true;
+          errorPassword.value = true
+          break;
+      }
+    } else if (login.value.email !== "" && login.value.password === "") {
+      switch(error.code) {
+        case "auth/wrong-password":
+          errMessage.value = "Password is incorrect";
+          errorPassword.value = true;
+          errorEmail.value = false;
+          break;
+        default:
+          errMessage.value = "Password is incorrect"
+          errorPassword.value = true;
+          errorEmail.value = false;
+          break;
+      }
+    } else {
+      errMessage.value = "Email or Password should not be empty"
+      errorEmail.value = true;
+      errorPassword.value = true;
+    }
+  })
+}
+const signInWithGoogle = () => {
+  const provider = new GoogleAuthProvider();
+  signInWithPopup(getAuth(), provider)
+    .then((result) => {
+      router.push("/dashboard");
+    })
+    .catch((error) => {
+      console.log(error.message);
+    })
 }
 </script>
 

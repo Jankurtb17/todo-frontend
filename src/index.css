@@ -6,3 +6,15 @@
   align-items: center;
   justify-content: center;
 }
+
+.my-tabs .el-tabs__header {
+  flex-direction: row-reverse; /* Reverse the direction of the tabs */
+}
+
+.my-tabs .el-tabs__item {
+  margin-left: 20px; /* Add some spacing between tabs */
+}
+
+.my-tabs .el-tabs__item .el-tabs__label {
+  justify-content: flex-end; /* Align text to the right */
+}

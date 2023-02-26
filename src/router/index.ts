@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory, viewDepthKey } from 'vue-router'
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -29,6 +30,9 @@ const router = createRouter({
       components: {
         Content: () => import('@/components/BaseLayout.vue')
       },
+      meta: {
+        requiresAuth: true
+      },
       children: [
         {
           path: '/home',
@@ -45,13 +49,35 @@ const router = createRouter({
           path: '/task',
           component: () => import('@/views/AppTask.vue')
         },
-        {
-          path: '/profile',
-          component: () => import('@/views/AppProfile.vue')
-        }
       ]
     },
   ]
 })
+
+const getCurrentUser = () => {
+  return new Promise((resolve, reject) => {
+    const removeListener = onAuthStateChanged(
+      getAuth(),
+      (user) => {
+        removeListener();
+        resolve(user);
+      },
+      reject
+    )
+  })
+}
+
+router.beforeEach(async (to, _from, next) => {
+  if(to.matched.some(record => record.meta.requiresAuth)) {
+    if(await getCurrentUser()) {
+      next();
+    } else {
+      next("/login")
+    }
+  } else {
+    next();
+  }
+});
+
 
 export default router

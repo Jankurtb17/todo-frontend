@@ -2,7 +2,7 @@
   <div class="grid">
     <div class="grid-1">
       <div class="welcome-text">
-        <h1>Hello Jan Kurt</h1>
+        <h1>Hello {{ store.$state.user?.displayName}}</h1>
         <span class="welcome">Welcome Back!</span>
       </div>
       <h1 class="overview">Overview</h1>
@@ -107,35 +107,6 @@
           "
         />
       </div>
-      <!-- <div class="daysOfTheMonth">
-        <div class="monthAndYear">
-          <h1 class="currMonth">{{ monthName }} {{ year }}</h1>
-          <div class="arrow">
-            <el-icon @click="prevMonth"><ArrowLeft /></el-icon>
-            <el-icon @click="nextMonth"><ArrowRight /></el-icon>
-          </div>
-        </div>
-        <table>
-          <thead>
-            <tr>
-              <th v-for="day in weekDays" :key="day">
-                {{ day }}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(week, index) in weeks" :key="index">
-              <td
-                v-for="day in week"
-                :key="day.date"
-                :class="{ today: isToday(day.date) }"
-              >
-                {{ day.date }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div> -->
     </div>
   </div>
 </template>
@@ -145,10 +116,10 @@ import { ref, computed, onMounted } from "vue";
 import useTask from "@/composables/task";
 import BaseSkeleton from "@/components/BaseSkeleton.vue";
 import { colors } from "@/utils/common";
+import useUserStore from "@/stores/user";
+import { storeToRefs } from "pinia";
+const store = useUserStore();
 const { getTasks, status } = useTask();
-let month = new Date().getMonth();
-let year = new Date().getFullYear();
-const today = new Date().getDate();
 const taskToday = ref([]);
 const taskPersonal = ref([]);
 const taskWork = ref([]);
@@ -159,8 +130,8 @@ const personalPercent = ref();
 const personalNotCompleted = ref(0);
 const value = ref(new Date());
 const result = ref();
-const todayTaskNotCompleted = ref([])
-const allPercent = ref()
+const todayTaskNotCompleted = ref([]);
+const allPercent = ref();
 const getData = async () => {
   const today = await getTasks("Today");
   const personal = await getTasks("Personal");
@@ -168,28 +139,48 @@ const getData = async () => {
   taskToday.value = today;
   taskPersonal.value = personal;
   taskWork.value = work;
-  
-  todayTaskNotCompleted.value = taskToday.value.filter((item) => item.completed !== true)
+
+  todayTaskNotCompleted.value = taskToday.value.filter(
+    (item) => item.completed !== true
+  );
   // task today length
-  notCompleted.value = taskToday.value.filter((item) => item.completed !== true ).length;
-  const completed = taskToday.value.filter((item) => item.completed === true).length;
-  result.value = Number(((completed / taskToday.value.length) * 100).toFixed(0));
+  notCompleted.value = taskToday.value.filter(
+    (item) => item.completed !== true
+  ).length;
+  const completed = taskToday.value.filter(
+    (item) => item.completed === true
+  ).length;
+  result.value = Number(
+    ((completed / taskToday.value.length) * 100).toFixed(0)
+  );
 
   //personal length
-  personalNotCompleted.value = taskPersonal.value.filter((item) => item.completed !== true).length;
-  const personalCompleted = taskPersonal.value.filter((item) => item.completed === true).length;
-  personalPercent.value = Number(((personalCompleted / taskPersonal.value.length) * 100).toFixed(0)); 
-  
+  personalNotCompleted.value = taskPersonal.value.filter(
+    (item) => item.completed !== true
+  ).length;
+  const personalCompleted = taskPersonal.value.filter(
+    (item) => item.completed === true
+  ).length;
+  personalPercent.value = Number(
+    ((personalCompleted / taskPersonal.value.length) * 100).toFixed(0)
+  );
+
   //work length
-  workNotCompleted.value = taskWork.value.filter((item) => item.completed !== true).length;
-  const workCompleted = taskWork.value.filter((item) => item.completed === true).length;
-  workPercent.value = Number(((workCompleted / taskWork.value.length) * 100).toFixed(0));
+  workNotCompleted.value = taskWork.value.filter(
+    (item) => item.completed !== true
+  ).length;
+  const workCompleted = taskWork.value.filter(
+    (item) => item.completed === true
+  ).length;
+  workPercent.value = Number(
+    ((workCompleted / taskWork.value.length) * 100).toFixed(0)
+  );
 
   //overall progress
-  const progress = personalCompleted + workCompleted + completed
-  const allTaskLength = taskToday.value.length + taskPersonal.value.length + taskWork.value.length
-  allPercent.value = Number(((progress / allTaskLength ) * 100).toFixed(0))
-  console.log(taskToday.value)
+  const progress = personalCompleted + workCompleted + completed;
+  const allTaskLength =
+    taskToday.value.length + taskPersonal.value.length + taskWork.value.length;
+  allPercent.value = Number(((progress / allTaskLength) * 100).toFixed(0));
 };
 
 onMounted(() => {

@@ -9,28 +9,13 @@
             </div>
             <div class="route-links">
               <ul>
-                <router-link class="routes" to="/dashboard"
-                  ><view-dashboard class="sidebar-icon" />
-                  Dashboard
-                </router-link>
-                <router-link class="routes" to="/task">
-                  <list-box class="sidebar-icon" />
-                  Task List
-                </router-link>
-                <router-link class="routes" to="/profile">
-                  <account-circle class="sidebar-icon" />
-                  Profile</router-link
-                >
+                  <router-link to="/dashboard"><el-icon class="sidebar-icon" :size="20"><Menu /></el-icon> Dashboard</router-link>
+                  <router-link to="/task"> <el-icon class="sidebar-icon" :size="20"><Memo /></el-icon> Task List </router-link>
               </ul>
             </div>
             <div class="route-logout">
-              <ul>
-                <router-link to="/logout">
-                  <el-icon class="sidebar-icon" :size="20"
-                    ><SwitchButton
-                  /></el-icon>
-                  Logout</router-link
-                >
+              <ul @click="logoutUser" class="logout">
+                <el-icon class="sidebar-icon" :size="20"><SwitchButton /></el-icon> Logout
               </ul>
             </div>
           </div>
@@ -45,28 +30,51 @@
   </el-container>
 </template>
 <script lang="ts" setup>
-import AppNavbar from "@/components/AppNavbar.vue";
 import { SwitchButton, UserFilled } from "@element-plus/icons-vue";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import { useRouter } from "vue-router";
+const router = useRouter();
+const isLoggedIn = ref(false);
 const isClicked = ref(false);
 const foldMenu = () => {
   isClicked.value = !isClicked.value;
 };
-const isLoading = ref(false);
+const isLoading = ref(false)
 const menus = ref([
   {
     name: "Dashboard",
     link: "/dashboard",
+
   },
   {
     name: "Task List",
-    link: "/task",
+    link: "/task"
   },
   {
     name: "Profile",
-    link: "/profile",
-  },
-]);
+    link: "/profile"
+  }
+])
+
+let auth:any;
+const logoutUser = () => {
+  signOut(auth).then(() => {
+    router.push("/")
+  })
+}
+
+
+onMounted(() => {
+  auth = getAuth();
+  onAuthStateChanged(auth, (user) => {
+    if(user) {
+      isLoggedIn.value = true;
+    } else {
+      isLoggedIn.value = false;
+    }
+  })
+})
 </script>
 
 <style scoped>
@@ -103,7 +111,7 @@ ul {
   list-style-type: none;
   padding: 0em;
   display: flex;
-  flex-direction: column;
+  flex-direction:column;
   justify-content: center;
   /* align-items: center; */
 }
@@ -139,14 +147,8 @@ a {
   justify-content: flex-end;
 }
 
-.material-design-icon.sidebar-icon {
-  position: relative;
-  margin-right: 20px;
-}
-
-.routes {
-  display: flex;
-  flex-direction: row;
-  row-gap: 5px;
+.logout {
+  display: inline;
+  cursor: pointer;
 }
 </style>

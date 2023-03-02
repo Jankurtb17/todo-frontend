@@ -18,3 +18,8 @@
 .my-tabs .el-tabs__item .el-tabs__label {
   justify-content: flex-end; /* Align text to the right */
 }
+
+.el-main {
+  height: 100vh;
+  overflow-x: hidden;
+}

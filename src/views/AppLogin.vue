@@ -1,77 +1,114 @@
 <template>
   <div class="main-view">
     <el-container>
-      <el-main>
-        <el-row class="row lg-devices" justify="center">
-          <el-col
-            :xl="6"
-            :lg="6"
-            :md="8"
-            :span="4"
-            class="grid-content left-content"
-          >
-            <h1 class="main-text">Welcome</h1>
-            <el-form>
-              <el-row class="login-google" @click="signInWithGoogle">
-                <img src="@/assets/GoogleIcon.svg" class="google-icon" />
-                <span>SIGN IN WITH GOOGLE</span>
-              </el-row>
-              <div class="group">
-                <div class="item line"></div>
-                <div class="item text">or login with email</div>
-                <div class="item line"></div>
-              </div>
-              <div>
-                <BaseInput
-                  v-model="login.email"
-                  placeholder="Enter email"
-                  clearable
-                  style="height: 45px"
-                />
-                <BaseInput
-                  v-model="login.password"
-                  placeholder="Enter password"
-                  type="password"
-                  style="height: 45px"
-                  clearable
-                />
-              </div>
-              <el-button style="width: 100%" class="btn btn-login" @click="loginUser"
-                >Sign In</el-button
-              >
+      <el-main class="login">
+        <div class="overlay-container">
+          <div class="login">
+            <transition name="login">
+              <div class="login-form left-content" v-if="loginIsVisible">
+                <h1 class="main-text">Welcome</h1>
+                <el-form>
+                  <el-row class="login-google" @click="signInWithGoogle">
+                    <img src="@/assets/GoogleIcon.svg" class="google-icon" />
+                    <span>SIGN IN WITH GOOGLE</span>
+                  </el-row>
+                  <div class="group">
+                    <div class="item line"></div>
+                    <div class="item text">or login with email</div>
+                    <div class="item line"></div>
+                  </div>
+                  <div>
+                    <BaseInput
+                      v-model="login.email"
+                      placeholder="Enter email"
+                      clearable
+                      style="height: 45px"
+                    />
+                    <BaseInput
+                      v-model="login.password"
+                      placeholder="Enter password"
+                      type="password"
+                      style="height: 45px"
+                      clearable
+                    />
+                  </div>
+                  <el-button
+                    style="width: 100%"
+                    class="btn btn-login"
+                    @click="loginUser"
+                    >Sign In</el-button
+                  >
 
-              <div class="login-register">
-                <div>
-                  Don't have an account yet? Register
-                  <router-link to="/" class="register-link">here</router-link>
-                </div>
+                  <div class="login-register">
+                    <div>
+                      Don't have an account yet? Register
+                      <span @click="changeForm">here</span>
+                    </div>
+                  </div>
+                </el-form>
               </div>
-            </el-form>
-          </el-col>
-          <el-col :xl="6" :lg="6" :span="12" class="grid-content right-content">
-            <img src="@/assets/task.svg" class="img-right" />
-          </el-col>
-        </el-row>
+            </transition>
+            <transition name="login-img">
+              <!-- <div class="login-img" v-if="loginIsVisible"> -->
+              <img src="@/assets/task.svg" v-if="loginIsVisible" />
+              <!-- </div> -->
+            </transition>
+            <transition name="register-img">
+              <div class="register" v-if="registerIsVisible">
+                <img src="@/assets/task.svg" />
+              </div>
+            </transition>
+            <transition name="register">
+              <div class="register-form right-content" v-if="registerIsVisible">
+                <h1 class="main-text">Register</h1>
+                <el-form>
+                  <el-row class="login-google" @click="signInWithGoogle">
+                    <img src="@/assets/GoogleIcon.svg" class="google-icon" />
+                    <span>SIGN IN WITH GOOGLE</span>
+                  </el-row>
+                  <div class="group">
+                    <div class="item line"></div>
+                    <div class="item text">or login with email</div>
+                    <div class="item line"></div>
+                  </div>
+                  <div>
+                    <BaseInput
+                      v-model="login.email"
+                      placeholder="Enter email"
+                      clearable
+                      style="height: 45px"
+                    />
+                    <BaseInput
+                      v-model="login.password"
+                      placeholder="Enter password"
+                      type="password"
+                      style="height: 45px"
+                      clearable
+                    />
+                  </div>
+                  <el-button
+                    style="width: 100%"
+                    class="btn btn-login"
+                    @click="loginUser"
+                    >Sign In</el-button
+                  >
 
-        <!-- SM and MD Device -->
-        <el-row justify="center" class="mdsm-devices">
-          <el-col :span="16">
-            <div>
-              <img src="@/assets/task.svg" class="img-sm" />
-              <h1>Hello!</h1>
-              <p>
-                Best place to log your task <br /> and 
-                share your experiences
-              </p>
-            </div>
-            <div class="md-btn">
-              <router-link to="/login" class="login-btn">LOGIN</router-link>
-              <router-link to="/register" class="register-btn"
-                >REGISTER</router-link
-              >
-            </div>
-          </el-col>
-        </el-row>
+                  <div class="login-register">
+                    <div>
+                      Don't have an account yet? Register
+                      <span @click="changeForm">here</span>
+                    </div>
+                  </div>
+                </el-form>
+              </div>
+            </transition>
+          </div>
+          <!-- <div class="overlay-container" v-if="registerIsVisible">
+                <div class="register"> -->
+          <!-- </div>
+            </transition>
+              </div> -->
+        </div>
       </el-main>
     </el-container>
   </div>
@@ -81,68 +118,81 @@
 import BaseInput from "@/components/BaseInput.vue";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { getAuth, signInWithEmailAndPassword,GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from "firebase/auth";
 import useUserStore from "@/stores/user";
 const store = useUserStore();
-const router = useRouter()
+const router = useRouter();
 const errorEmail = ref(false);
 const errorPassword = ref(false);
 const errMessage = ref();
+const loginIsVisible = ref(true);
+const registerIsVisible = ref(false);
 type SignIn = {
-  email: string,
-  password: string
-}
+  email: string;
+  password: string;
+};
 let login = ref<SignIn>({
   email: "",
-  password: ""
-})
+  password: "",
+});
+
+const changeForm = () => {
+  loginIsVisible.value = !loginIsVisible.value;
+  registerIsVisible.value = !registerIsVisible.value;
+};
+
 const loginUser = () => {
-  const auth = getAuth()
+  const auth = getAuth();
   signInWithEmailAndPassword(auth, login.value.email, login.value.password)
-  .then(() => {
-    router.push("/dashboard")
-  })
-  .catch((error) => {
-    if(login.value.email !== "" && login.value.password !== "") {
-      switch(error.code) {
-        case "auth/invalid-email":
-          errMessage.value = "Please enter a valid email address";
-          errorEmail.value = true;
-          break;
-        case "auth/user-not-found":
-          errMessage.value = "No account with that email was found";
-          errorEmail.value = true;
-          break;
-        case "auth/wrong-password":
-          errMessage.value = "Password is incorrect";
-          errorPassword.value = true
-          break;
-        default:
-          errMessage.value = "Email or password is incorrect"
-          errorEmail.value = true;
-          errorPassword.value = true
-          break;
+    .then(() => {
+      router.push("/dashboard");
+    })
+    .catch((error) => {
+      if (login.value.email !== "" && login.value.password !== "") {
+        switch (error.code) {
+          case "auth/invalid-email":
+            errMessage.value = "Please enter a valid email address";
+            errorEmail.value = true;
+            break;
+          case "auth/user-not-found":
+            errMessage.value = "No account with that email was found";
+            errorEmail.value = true;
+            break;
+          case "auth/wrong-password":
+            errMessage.value = "Password is incorrect";
+            errorPassword.value = true;
+            break;
+          default:
+            errMessage.value = "Email or password is incorrect";
+            errorEmail.value = true;
+            errorPassword.value = true;
+            break;
+        }
+      } else if (login.value.email !== "" && login.value.password === "") {
+        switch (error.code) {
+          case "auth/wrong-password":
+            errMessage.value = "Password is incorrect";
+            errorPassword.value = true;
+            errorEmail.value = false;
+            break;
+          default:
+            errMessage.value = "Password is incorrect";
+            errorPassword.value = true;
+            errorEmail.value = false;
+            break;
+        }
+      } else {
+        errMessage.value = "Email or Password should not be empty";
+        errorEmail.value = true;
+        errorPassword.value = true;
       }
-    } else if (login.value.email !== "" && login.value.password === "") {
-      switch(error.code) {
-        case "auth/wrong-password":
-          errMessage.value = "Password is incorrect";
-          errorPassword.value = true;
-          errorEmail.value = false;
-          break;
-        default:
-          errMessage.value = "Password is incorrect"
-          errorPassword.value = true;
-          errorEmail.value = false;
-          break;
-      }
-    } else {
-      errMessage.value = "Email or Password should not be empty"
-      errorEmail.value = true;
-      errorPassword.value = true;
-    }
-  })
-}
+    });
+};
 const signInWithGoogle = () => {
   const provider = new GoogleAuthProvider();
   signInWithPopup(getAuth(), provider)
@@ -151,21 +201,92 @@ const signInWithGoogle = () => {
     })
     .catch((error) => {
       console.log(error.message);
-    })
-}
+    });
+};
 </script>
 
 <style scoped>
-.main-view {
-  margin-top: 8%;
+.overlay-container {
+  display: grid;
+  position: relative;
 }
 
-.el-col {
-  min-height: 60vh;
+.login {
+  display: grid;
+  grid-auto-flow: columns;
+  grid-template-columns: 550px 550px;
+  place-content: center;
   border: 1px solid lightgray;
 }
 
-.left-content {
+.login {
+  z-index: 1;
+}
+
+.login-enter-active,
+.login-leave-active {
+  transition: 400ms ease all;
+  position: absolute;
+  z-index: 5;
+}
+
+.login-enter-from,
+.login-leave-to {
+  opacity: 0;
+  transform: translateX(100%);
+  z-index: -5;
+}
+
+.login-img-enter-active,
+.login-img-leave-active {
+  transition: 400ms ease all;
+  position: absolute;
+}
+
+.login-img-enter-from,
+.login-img-leave-to {
+  opacity: 0;
+  transform: translateX(0);
+  z-index: -1;
+}
+
+.register-enter-active,
+.register-leave-active {
+  transition: 4000ms ease-in-out;
+  position: absolute;
+  width: 550px;
+  transform: translateX(100%);
+  z-index: 100;
+}
+
+.register-enter-from,
+.register-leave-to {
+  opacity: 0;
+  transform: translateX(0);
+  z-index: -10;
+}
+
+.register-img-enter-active,
+.register-img-leave-active {
+  transition: 400ms ease-in-out;
+  transform: translateX(0);
+  z-index: 5;
+}
+
+.register-img-enter-from,
+.register-img-leave-to {
+  opacity: 0;
+  transform: translateX(100%);
+  z-index: -10;
+}
+
+/* .register,
+.register-form {
+  display: none;
+} */
+
+.left-content,
+.right-content {
   background-color: #33658a;
   color: white;
 }
@@ -261,10 +382,11 @@ const signInWithGoogle = () => {
   }
   .el-main {
     overflow-y: hidden;
-    min-height: 95vh
-  }  
+    min-height: 95vh;
+  }
   .lg-devices {
-    display: none;
+    transform: translateX(0);
+    transition: transform 0.5s ease-in-out;
   }
 
   .mdsm-devices {
@@ -282,7 +404,7 @@ const signInWithGoogle = () => {
   }
 
   .mdsm-devices h1 {
-    margin-top:50px;
+    margin-top: 50px;
     font-size: 40px;
     text-align: center;
     letter-spacing: 5px;
@@ -332,7 +454,6 @@ const signInWithGoogle = () => {
 
 /*  Tablet */
 @media only screen and (min-width: 481px) and (max-width: 820px) {
-  
   .lg-devices {
     display: none;
   }

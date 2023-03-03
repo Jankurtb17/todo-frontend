@@ -1,15 +1,14 @@
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
+import { createApp } from "vue";
+import { createPinia } from "pinia";
 
-import App from './App.vue'
-import router from './router'
-import ElementPlus from './plugins/element-plus'
-import Material from "./plugins/material"
-import 'element-plus/dist/index.css'
-import './assets/main.css'
-import './index.css'
+import App from "./App.vue";
+import router from "./router";
+import ElementPlus from "./plugins/element-plus";
+import Material from "./plugins/material";
+import "element-plus/dist/index.css";
+import "./assets/main.css";
+import "./index.css";
 import { initializeApp } from "firebase/app";
-
 
 // For Firebase config
 const firebaseConfig = {
@@ -19,15 +18,15 @@ const firebaseConfig = {
   storageBucket: "todo-ceb51.appspot.com",
   messagingSenderId: "926542903835",
   appId: "1:926542903835:web:84127aca517d5450c896be",
-  measurementId: "G-5269R9P1E8"
+  measurementId: "G-5269R9P1E8",
 };
 
 // Initialize Firebase
 initializeApp(firebaseConfig);
-const app = createApp(App)
+const app = createApp(App);
 
-app.use(createPinia())
-app.use(router)
-app.use(Material)
-app.use(ElementPlus)
-app.mount('#app')
+app.use(createPinia());
+app.use(router);
+app.use(Material);
+app.use(ElementPlus);
+app.mount("#app");

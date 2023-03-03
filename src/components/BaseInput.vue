@@ -1,9 +1,9 @@
 <template>
-  <el-form-item prop="label">
+  <el-form-item :prop="prop">
     <el-input v-bind="$attrs" />
   </el-form-item>
 </template>
 
 <script lang="ts" setup>
-defineProps(["label", "text"]);
+defineProps(["label", "text", "prop"]);
 </script>

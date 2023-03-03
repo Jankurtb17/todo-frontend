@@ -75,6 +75,7 @@ onMounted(() => {
     }
   })
 })
+
 </script>
 
 <style scoped>

@@ -7,7 +7,7 @@
             <transition name="login">
               <div class="login-form left-content" v-if="loginIsVisible">
                 <h1 class="main-text">Welcome</h1>
-                <el-form>
+                <el-form v-model="form" :rules="rules">
                   <el-row class="login-google" @click="signInWithGoogle">
                     <img src="@/assets/GoogleIcon.svg" class="google-icon" />
                     <span>SIGN IN WITH GOOGLE</span>
@@ -19,13 +19,13 @@
                   </div>
                   <div>
                     <BaseInput
-                      v-model="login.email"
+                      v-model="form.email"
                       placeholder="Enter email"
                       clearable
                       style="height: 45px"
                     />
                     <BaseInput
-                      v-model="login.password"
+                      v-model="form.password"
                       placeholder="Enter password"
                       type="password"
                       style="height: 45px"
@@ -49,9 +49,9 @@
               </div>
             </transition>
             <transition name="login-img">
-              <!-- <div class="login-img" v-if="loginIsVisible"> -->
-              <img src="@/assets/task.svg" v-if="loginIsVisible" />
-              <!-- </div> -->
+              <div class="login-img" v-if="loginIsVisible">
+                <img src="@/assets/task.svg" v-if="loginIsVisible" />
+              </div>
             </transition>
             <transition name="register-img">
               <div class="register" v-if="registerIsVisible">
@@ -60,28 +60,35 @@
             </transition>
             <transition name="register">
               <div class="register-form right-content" v-if="registerIsVisible">
-                <h1 class="main-text">Register</h1>
-                <el-form>
+                <h1 class="main-text">Create an account</h1>
+                <el-form ref="ruleRefForm" :model="form" :rules="rules">
                   <el-row class="login-google" @click="signInWithGoogle">
                     <img src="@/assets/GoogleIcon.svg" class="google-icon" />
-                    <span>SIGN IN WITH GOOGLE</span>
+                    <span>REGISTER WITH GOOGLE</span>
                   </el-row>
                   <div class="group">
                     <div class="item line"></div>
-                    <div class="item text">or login with email</div>
+                    <div class="item text">or register with email</div>
                     <div class="item line"></div>
                   </div>
                   <div>
                     <BaseInput
-                      v-model="login.email"
+                      v-model="form.email"
                       placeholder="Enter email"
                       clearable
+                      prop="email"
                       style="height: 45px"
                     />
+                    <transition name="err">
+                      <div class="err-email">
+                        {{ errEmailMsg }}
+                      </div>
+                    </transition>
                     <BaseInput
-                      v-model="login.password"
+                      v-model="form.password"
                       placeholder="Enter password"
                       type="password"
+                      prop="password"
                       style="height: 45px"
                       clearable
                     />
@@ -89,13 +96,13 @@
                   <el-button
                     style="width: 100%"
                     class="btn btn-login"
-                    @click="loginUser"
-                    >Sign In</el-button
+                    @click="registerUser"
+                    >Register</el-button
                   >
 
                   <div class="login-register">
                     <div>
-                      Don't have an account yet? Register
+                      Already have an account? login
                       <span @click="changeForm">here</span>
                     </div>
                   </div>
@@ -103,11 +110,6 @@
               </div>
             </transition>
           </div>
-          <!-- <div class="overlay-container" v-if="registerIsVisible">
-                <div class="register"> -->
-          <!-- </div>
-            </transition>
-              </div> -->
         </div>
       </el-main>
     </el-container>
@@ -116,27 +118,55 @@
 
 <script lang="ts" setup>
 import BaseInput from "@/components/BaseInput.vue";
-import { ref } from "vue";
+import { ref, reactive } from "vue";
 import { useRouter } from "vue-router";
 import {
   getAuth,
   signInWithEmailAndPassword,
   GoogleAuthProvider,
   signInWithPopup,
+  createUserWithEmailAndPassword,
 } from "firebase/auth";
 import useUserStore from "@/stores/user";
+import type { FormInstance, FormRules } from "element-plus";
+const ruleRefForm = ref<FormInstance>();
 const store = useUserStore();
 const router = useRouter();
 const errorEmail = ref(false);
 const errorPassword = ref(false);
+const errEmailMsg = ref("");
 const errMessage = ref();
 const loginIsVisible = ref(true);
 const registerIsVisible = ref(false);
+
+const rules = reactive<FormRules>({
+  email: [
+    {
+      required: true,
+      message: "Please enter a username",
+      trigger: "blur",
+    },
+  ],
+  password: [
+    {
+      required: true,
+      message: "Please enter a password",
+      trigger: "blur",
+    },
+    {
+      min: 8,
+      max: 50,
+      message: "Password should be longer than 8 characters",
+      trigger: "blur",
+    },
+  ],
+});
+
 type SignIn = {
   email: string;
   password: string;
 };
-let login = ref<SignIn>({
+let form = ref<SignIn>({
   email: "",
   password: "",
 });
@@ -148,19 +178,19 @@ const changeForm = () => {
 
 const loginUser = () => {
   const auth = getAuth();
-  signInWithEmailAndPassword(auth, login.value.email, login.value.password)
+  signInWithEmailAndPassword(auth, form.value.email, form.value.password)
     .then(() => {
       router.push("/dashboard");
     })
     .catch((error) => {
-      if (login.value.email !== "" && login.value.password !== "") {
+      if (form.value.email !== "" && form.value.password !== "") {
         switch (error.code) {
           case "auth/invalid-email":
-            errMessage.value = "Please enter a valid email address";
+            errEmailMsg.value = "Please enter a valid email address";
             errorEmail.value = true;
             break;
           case "auth/user-not-found":
-            errMessage.value = "No account with that email was found";
+            errEmailMsg.value = "No account with that email was found";
             errorEmail.value = true;
             break;
           case "auth/wrong-password":
@@ -173,26 +203,48 @@ const loginUser = () => {
             errorPassword.value = true;
             break;
         }
-      } else if (login.value.email !== "" && login.value.password === "") {
-        switch (error.code) {
-          case "auth/wrong-password":
-            errMessage.value = "Password is incorrect";
-            errorPassword.value = true;
-            errorEmail.value = false;
-            break;
-          default:
-            errMessage.value = "Password is incorrect";
-            errorPassword.value = true;
-            errorEmail.value = false;
-            break;
-        }
-      } else {
-        errMessage.value = "Email or Password should not be empty";
-        errorEmail.value = true;
-        errorPassword.value = true;
       }
     });
 };
+
+const registerUser = () => {
+  if (ruleRefForm.value === undefined) {
+    return;
+  } else {
+    ruleRefForm.value.validate((isValid: boolean) => {
+      if (isValid) {
+        const auth = getAuth();
+        createUserWithEmailAndPassword(
+          auth,
+          form.value.email,
+          form.value.password
+        )
+          .then((data) => {
+            console.log(data);
+            router.push("/dashboard");
+          })
+          .catch((error) => {
+            console.log(error.message);
+            if (form.value.email !== "" && form.value.password !== "") {
+              switch (error.code) {
+                case "auth/email-already-in-use":
+                  errEmailMsg.value = "Email already exists";
+                  break;
+                case "auth/invalid-email":
+                  errEmailMsg.value = "Please enter a valid email address";
+                  break;
+                default:
+                  errMessage.value = "";
+                  break;
+              }
+              console.log(errEmailMsg.value);
+            }
+          });
+      }
+    });
+  }
+};
+
 const signInWithGoogle = () => {
   const provider = new GoogleAuthProvider();
   signInWithPopup(getAuth(), provider)
@@ -228,35 +280,54 @@ const signInWithGoogle = () => {
   transition: 400ms ease all;
   position: absolute;
   z-index: 5;
+  width: 550px;
+  height: 53.7vh;
 }
 
 .login-enter-from,
 .login-leave-to {
   opacity: 0;
   transform: translateX(100%);
-  z-index: -5;
+}
+
+.login-leave-to {
+  z-index: -999;
+}
+
+.login-enter-from {
+  z-index: 10;
 }
 
 .login-img-enter-active,
 .login-img-leave-active {
-  transition: 400ms ease all;
   position: absolute;
+  width: 550px;
+  height: 53.7vh;
 }
 
 .login-img-enter-from,
 .login-img-leave-to {
   opacity: 0;
+  transition: 400ms ease all;
   transform: translateX(0);
+}
+
+.login-img-leave-to {
   z-index: -1;
+}
+
+.login-img-enter-from {
+  z-index: 40;
 }
 
 .register-enter-active,
 .register-leave-active {
-  transition: 4000ms ease-in-out;
+  transition: 400ms ease all;
   position: absolute;
   width: 550px;
   transform: translateX(100%);
   z-index: 100;
+  height: 53.7vh;
 }
 
 .register-enter-from,
@@ -268,16 +339,18 @@ const signInWithGoogle = () => {
 
 .register-img-enter-active,
 .register-img-leave-active {
-  transition: 400ms ease-in-out;
-  transform: translateX(0);
+  transition: 400ms ease all;
+  transform: translateX(100%);
   z-index: 5;
+  width: 550px;
+  height: 53.7vh;
 }
 
 .register-img-enter-from,
 .register-img-leave-to {
   opacity: 0;
-  transform: translateX(100%);
   z-index: -10;
+  transform: translateX(0);
 }
 
 /* .register,
@@ -372,6 +445,20 @@ const signInWithGoogle = () => {
 
 .img-right {
   padding-top: 20px;
+}
+
+.err-email {
+  font-size: 12px;
+  line-height: 1;
+  padding-top: 2px;
+  position: relative;
+  top: -18px;
+  left: 0;
+  color: #f56c6c;
+}
+
+.err {
+  border: 1px solid red;
 }
 
 /* Phone */

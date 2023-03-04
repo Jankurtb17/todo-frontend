@@ -5,26 +5,30 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: "/",
+      path: "/login",
       name: "main-login",
       components: {
         Login: () => import("@/views/AppLogin.vue"),
       },
     },
     {
-      path: "/login",
-      name: "md-login",
-      components: {
-        Login: () => import("@/views/AppSmLogin.vue"),
-      },
+      path: "/",
+      redirect: "/login",
     },
-    {
-      path: "/register",
-      name: "md-register",
-      components: {
-        Signup: () => import("@/views/AppSmRegister.vue"),
-      },
-    },
+    // {
+    //   path: "/login",
+    //   name: "md-login",
+    //   components: {
+    //     Login: () => import("@/views/AppSmLogin.vue"),
+    //   },
+    // },
+    // {
+    //   path: "/register",
+    //   name: "md-register",
+    //   components: {
+    //     Signup: () => import("@/views/AppSmRegister.vue"),
+    //   },
+    // },
     {
       path: "/",
       components: {
@@ -67,14 +71,14 @@ const getCurrentUser = () => {
   });
 };
 
-router.beforeEach(async (to, _from, next) => {
-  const isAuthenticated = getAuth().currentUser?.email;
-  if (to.matched.some((record) => record.meta.requiresAuth)) {
-    if (isAuthenticated !== "") {
-      next();
-    } else {
-      next("/");
-    }
+router.beforeEach(async (to, from, next) => {
+  const auth = getAuth();
+  const currentUser = auth.currentUser;
+  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
+  if (requiresAuth && !currentUser) {
+    next("/login");
+  } else if (to.path === "/login" && currentUser) {
+    next("/dashboard");
   } else {
     next();
   }

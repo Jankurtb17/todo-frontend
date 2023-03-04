@@ -24,6 +24,7 @@
                       clearable
                       style="height: 45px"
                     />
+                    <div class="err-email">{{ errLogEmailMsg }}</div>
                     <BaseInput
                       v-model="form.password"
                       placeholder="Enter password"
@@ -31,6 +32,7 @@
                       style="height: 45px"
                       clearable
                     />
+                    <div class="err-email">{{ errLogPassMsg }}</div>
                   </div>
                   <el-button
                     style="width: 100%"
@@ -54,7 +56,7 @@
               </div>
             </transition>
             <transition name="register-img">
-              <div class="register" v-if="registerIsVisible">
+              <div class="register-img" v-if="registerIsVisible">
                 <img src="@/assets/task.svg" />
               </div>
             </transition>
@@ -120,21 +122,18 @@
 import BaseInput from "@/components/BaseInput.vue";
 import { ref, reactive } from "vue";
 import { useRouter } from "vue-router";
-import {
-  getAuth,
-  signInWithEmailAndPassword,
-  GoogleAuthProvider,
-  signInWithPopup,
-  createUserWithEmailAndPassword,
-} from "firebase/auth";
 import useUserStore from "@/stores/user";
 import type { FormInstance, FormRules } from "element-plus";
+// import { storeToRefs } from "pinia";
+
 const ruleRefForm = ref<FormInstance>();
 const store = useUserStore();
 const router = useRouter();
 const errorEmail = ref(false);
 const errorPassword = ref(false);
 const errEmailMsg = ref("");
+const errLogEmailMsg = ref("");
+const errLogPassMsg = ref("");
 const errMessage = ref();
 const loginIsVisible = ref(true);
 const registerIsVisible = ref(false);
@@ -174,11 +173,14 @@ let form = ref<SignIn>({
 const changeForm = () => {
   loginIsVisible.value = !loginIsVisible.value;
   registerIsVisible.value = !registerIsVisible.value;
+  form.value.email = "";
+  form.value.password = "";
+  errEmailMsg.value = "";
 };
 
 const loginUser = () => {
-  const auth = getAuth();
-  signInWithEmailAndPassword(auth, form.value.email, form.value.password)
+  store
+    .loginUser(form.value.email, form.value.password)
     .then(() => {
       router.push("/dashboard");
     })
@@ -186,19 +188,19 @@ const loginUser = () => {
       if (form.value.email !== "" && form.value.password !== "") {
         switch (error.code) {
           case "auth/invalid-email":
-            errEmailMsg.value = "Please enter a valid email address";
+            errLogEmailMsg.value = "Please enter a valid email address";
             errorEmail.value = true;
             break;
           case "auth/user-not-found":
-            errEmailMsg.value = "No account with that email was found";
+            errLogEmailMsg.value = "No account with that email was found";
             errorEmail.value = true;
             break;
           case "auth/wrong-password":
-            errMessage.value = "Password is incorrect";
+            errLogPassMsg.value = "Password is incorrect";
             errorPassword.value = true;
             break;
           default:
-            errMessage.value = "Email or password is incorrect";
+            errLogPassMsg.value = "Email or password is incorrect";
             errorEmail.value = true;
             errorPassword.value = true;
             break;
@@ -213,12 +215,8 @@ const registerUser = () => {
   } else {
     ruleRefForm.value.validate((isValid: boolean) => {
       if (isValid) {
-        const auth = getAuth();
-        createUserWithEmailAndPassword(
-          auth,
-          form.value.email,
-          form.value.password
-        )
+        store
+          .registerUser(form.value.email, form.value.password)
           .then((data) => {
             console.log(data);
             router.push("/dashboard");
@@ -246,14 +244,9 @@ const registerUser = () => {
 };
 
 const signInWithGoogle = () => {
-  const provider = new GoogleAuthProvider();
-  signInWithPopup(getAuth(), provider)
-    .then((result) => {
-      router.push("/dashboard");
-    })
-    .catch((error) => {
-      console.log(error.message);
-    });
+  store.googleLogin().then(() => {
+    router.push("/dashboard");
+  });
 };
 </script>
 
@@ -463,79 +456,22 @@ const signInWithGoogle = () => {
 
 /* Phone */
 @media only screen and (min-width: 320px) and (max-width: 480px) {
-  .el-main {
+  .login {
+    grid-auto-flow: columns;
+    grid-template-columns: 1fr;
+  }
+  .login-img,
+  .register-img {
+    display: none;
+  }
+
+  .login-form {
     position: relative;
-    top: -4.5em;
-  }
-  .el-main {
-    overflow-y: hidden;
-    min-height: 95vh;
-  }
-  .lg-devices {
-    transform: translateX(0);
-    transition: transform 0.5s ease-in-out;
+    /* height: 100vh; */
   }
 
-  .mdsm-devices {
-    position: relative;
-    top: 10%;
-  }
-
-  .img-sm {
-    position: relative;
-    top: 20%;
-  }
-
-  .el-col {
-    border: none;
-  }
-
-  .mdsm-devices h1 {
-    margin-top: 50px;
-    font-size: 40px;
-    text-align: center;
-    letter-spacing: 5px;
-    font-family: "Roboto", sans-serif;
-    font-weight: 600;
-  }
-  .mdsm-devices p {
-    text-align: center;
-    font-size: 18px;
-    color: rgb(178, 184, 185);
-  }
-
-  .md-btn {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    flex-wrap: nowrap;
-  }
-
-  .login-btn {
-    padding: 1em;
-    background-color: #33658a;
-    color: #fff;
-    border: none;
-    margin-bottom: 25px;
-    font-family: "Roboto Condensed", sans-serif;
-    font-size: 15px;
-    letter-spacing: 5px;
-    text-decoration: none;
-    text-align: center;
-    /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
-  }
-
-  .register-btn {
-    padding: 1em;
-    background-color: #fff;
-    color: #33658a;
-    border: 2px solid #33658a;
-    margin-bottom: 25px;
-    font-family: "Roboto Condensed", sans-serif;
-    font-size: 15px;
-    letter-spacing: 5px;
-    text-decoration: none;
-    text-align: center;
+  .el-form {
+    padding-bottom: 20px;
   }
 }
 
@@ -611,27 +547,16 @@ const signInWithGoogle = () => {
 
 /*  Small Screen Laptop */
 @media only screen and (min-width: 821px) and (max-width: 1024px) {
+  .el-main {
+    display: none;
+  }
 }
 
 /*  Desktop */
 @media only screen and (min-width: 1025px) and (max-width: 1200px) {
-  .mdsm-devices {
-    display: none;
-  }
-
-  .md-btn {
-    display: none;
-  }
 }
 
 /*  large  */
 @media only screen and (min-width: 1201px) {
-  .mdsm-devices {
-    display: none;
-  }
-
-  .md-btn {
-    display: none;
-  }
 }
 </style>

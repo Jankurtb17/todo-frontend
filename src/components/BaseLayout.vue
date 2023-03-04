@@ -9,13 +9,22 @@
             </div>
             <div class="route-links">
               <ul>
-                  <router-link to="/dashboard"><el-icon class="sidebar-icon" :size="20"><Menu /></el-icon> Dashboard</router-link>
-                  <router-link to="/task"> <el-icon class="sidebar-icon" :size="20"><Memo /></el-icon> Task List </router-link>
+                <router-link to="/dashboard"
+                  ><el-icon class="sidebar-icon" :size="20"><Menu /></el-icon>
+                  Dashboard</router-link
+                >
+                <router-link to="/task">
+                  <el-icon class="sidebar-icon" :size="20"><Memo /></el-icon>
+                  Task List
+                </router-link>
               </ul>
             </div>
             <div class="route-logout">
               <ul @click="logoutUser" class="logout">
-                <el-icon class="sidebar-icon" :size="20"><SwitchButton /></el-icon> Logout
+                <el-icon class="sidebar-icon" :size="20"
+                  ><SwitchButton
+                /></el-icon>
+                Logout
               </ul>
             </div>
           </div>
@@ -40,42 +49,39 @@ const isClicked = ref(false);
 const foldMenu = () => {
   isClicked.value = !isClicked.value;
 };
-const isLoading = ref(false)
+const isLoading = ref(false);
 const menus = ref([
   {
     name: "Dashboard",
     link: "/dashboard",
-
   },
   {
     name: "Task List",
-    link: "/task"
+    link: "/task",
   },
   {
     name: "Profile",
-    link: "/profile"
-  }
-])
+    link: "/profile",
+  },
+]);
 
-let auth:any;
+let auth: any;
 const logoutUser = () => {
   signOut(auth).then(() => {
-    router.push("/")
-  })
-}
-
+    router.push("/login");
+  });
+};
 
 onMounted(() => {
   auth = getAuth();
   onAuthStateChanged(auth, (user) => {
-    if(user) {
+    if (user) {
       isLoggedIn.value = true;
     } else {
       isLoggedIn.value = false;
     }
-  })
-})
-
+  });
+});
 </script>
 
 <style scoped>
@@ -112,7 +118,7 @@ ul {
   list-style-type: none;
   padding: 0em;
   display: flex;
-  flex-direction:column;
+  flex-direction: column;
   justify-content: center;
   /* align-items: center; */
 }

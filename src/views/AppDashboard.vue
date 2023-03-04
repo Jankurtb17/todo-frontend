@@ -2,7 +2,7 @@
   <div class="grid">
     <div class="grid-1">
       <div class="welcome-text">
-        <h1>Hello {{ store.$state.user?.displayName}}</h1>
+        <h1>Hello {{ store.$state.user?.displayName }}</h1>
         <span class="welcome">Welcome Back!</span>
       </div>
       <h1 class="overview">Overview</h1>
@@ -115,6 +115,8 @@
 import { ref, computed, onMounted } from "vue";
 import useTask from "@/composables/task";
 import BaseSkeleton from "@/components/BaseSkeleton.vue";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { useRouter } from "vue-router";
 import { colors } from "@/utils/common";
 import useUserStore from "@/stores/user";
 import { storeToRefs } from "pinia";
@@ -132,6 +134,7 @@ const value = ref(new Date());
 const result = ref();
 const todayTaskNotCompleted = ref([]);
 const allPercent = ref();
+const router = useRouter();
 const getData = async () => {
   const today = await getTasks("Today");
   const personal = await getTasks("Personal");
@@ -183,8 +186,18 @@ const getData = async () => {
   allPercent.value = Number(((progress / allTaskLength) * 100).toFixed(0));
 };
 
+const checkIfAuthenticated = () => {
+  const auth = getAuth();
+  auth.onAuthStateChanged((user) => {
+    if (!user) {
+      router.push("/login");
+    }
+  });
+};
+
 onMounted(() => {
   getData();
+  checkIfAuthenticated();
 });
 </script>
 

@@ -2,7 +2,7 @@
   <div class="grid">
     <div class="grid-1">
       <div class="welcome-text">
-        <h1>Hello {{ store.$state.userDetails.displayName }}</h1>
+        <h1>Hello {{ displayName }}</h1>
         <span class="welcome">Welcome Back!</span>
       </div>
       <h1 class="overview">Overview</h1>
@@ -126,7 +126,9 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "vue-router";
 import { colors } from "@/utils/common";
 import useUserStore from "@/stores/user";
+import { storeToRefs } from "pinia";
 const store = useUserStore();
+const { getEmail, displayName } = storeToRefs(store)
 const { getTasks, status } = useTask();
 const taskToday = ref([]);
 const taskPersonal = ref([]);
@@ -142,13 +144,13 @@ const todayTaskNotCompleted = ref([]);
 const allPercent = ref();
 const router = useRouter();
 const getData = async () => {
+  console.log(getEmail.value)
   const today = await getTasks("Today");
   const personal = await getTasks("Personal");
   const work = await getTasks("Work");
   taskToday.value = today as any;
   taskPersonal.value = personal as any;
   taskWork.value = work as any;
-
   todayTaskNotCompleted.value = taskToday.value.filter(
     (item: any) => item.completed !== true
   );
@@ -194,8 +196,12 @@ const getData = async () => {
   //overall progress
   const progress = personalCompleted + workCompleted + completed;
   const allTaskLength =
-    taskToday.value.length + taskPersonal.value.length + taskWork.value.length;
-  allPercent.value = Number(((progress / allTaskLength) * 100).toFixed(0));
+    taskToday.value.length < 0 ? 0 : taskToday.value.length + taskPersonal.value.length < 0 ? 0 : taskPersonal.value.length + taskWork.value.length < 0 ? 0 : taskWork.value.length;
+  if(isNaN(allPercent.value)) {
+    return 0
+  } else {
+    return allPercent.value = Number(((progress / allTaskLength) * 100).toFixed(0));
+  }
 };
 
 const checkIfAuthenticated = () => {

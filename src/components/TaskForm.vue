@@ -66,6 +66,8 @@ import type { FormInstance, FormRules } from "element-plus";
 import useTask, { status } from "@/composables/task";
 import { ElMessage } from "element-plus";
 import { message } from "@/utils/common";
+import useUserStore from "@/stores/user"
+const { userDetails } = useUserStore();
 const { postTask } = useTask();
 const form = reactive({} as FormType);
 const ruleRefForm = ref<FormInstance>();
@@ -131,6 +133,8 @@ const submitForm = () => {
   ruleRefForm.value.validate(async (isValid) => {
     if (isValid) {
       form.completed = false;
+      form.author = userDetails.email as any
+      console.log(form)
       await postTask(form);
       ElMessage({
         message: "Successfully added",

@@ -67,7 +67,9 @@ import useTask, { status } from "@/composables/task";
 import { ElMessage } from "element-plus";
 import { message } from "@/utils/common";
 import useUserStore from "@/stores/user"
-const { userDetails } = useUserStore();
+import { storeToRefs } from "pinia";
+const store = useUserStore();
+const { getEmail } = storeToRefs(store);
 const { postTask } = useTask();
 const form = reactive({} as FormType);
 const ruleRefForm = ref<FormInstance>();
@@ -133,7 +135,7 @@ const submitForm = () => {
   ruleRefForm.value.validate(async (isValid) => {
     if (isValid) {
       form.completed = false;
-      form.author = userDetails.email as any
+      form.author = getEmail.value as any
       console.log(form)
       await postTask(form);
       ElMessage({

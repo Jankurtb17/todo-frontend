@@ -10,14 +10,11 @@ import {
 import { useRouter } from "vue-router";
 const auth = getAuth();
 const router = useRouter();
-const user = auth.currentUser;
+const user = auth
 
 export const useUserStore = defineStore("user", {
   state: () => ({
-    userDetails: {
-      displayName: user?.displayName,
-      email: user?.email
-    }
+    userDetails: user
   }),
   actions: {
     loginUser(email: string, password: string) {
@@ -37,19 +34,19 @@ export const useUserStore = defineStore("user", {
     },
     googleLogin() {
       const provider = new GoogleAuthProvider();
-      const google = signInWithPopup(getAuth(), provider)
-        .then((result) => {
-          router.push("/dashboard");
-        })
-        .catch((error) => {
-          console.log(error.message);
-        });
+      const google = signInWithPopup(auth, provider)
       return google;
     },
   },
   getters: {
     checkAuthentication(state) {
       return state.isAuthenticated;
+    },
+    getEmail(state) {
+      return state.userDetails.currentUser?.email
+    },
+    displayName(state) {
+      return state.userDetails.currentUser?.displayName
     },
   },
 });

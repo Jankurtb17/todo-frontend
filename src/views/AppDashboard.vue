@@ -2,7 +2,7 @@
   <div class="grid">
     <div class="grid-1">
       <div class="welcome-text">
-        <h1>Hello {{ store.$state.user?.displayName}}</h1>
+        <h1>Hello {{ store.$state.userDetails.displayName }}</h1>
         <span class="welcome">Welcome Back!</span>
       </div>
       <h1 class="overview">Overview</h1>
@@ -55,30 +55,37 @@
         <h1 class="task-today">Task Today</h1>
         <router-link to="/task">See All</router-link>
       </div>
-      <div v-if="taskToday.length > 0">
-        <div
-          class="grid-row-item"
-          v-for="task in todayTaskNotCompleted.slice(0, 3)"
-          :key="task._id"
-        >
-          <div class="task-list">
-            <img src="../assets/list.svg" />
-          </div>
-          <div class="task-name">
-            <span class="header">Task name</span>
-            <span class="text">{{ task.title }}</span>
-          </div>
-          <div class="start">
-            <span class="header">Start time</span>
-            <span class="text"> {{ task.start }}</span>
-          </div>
-          <div class="time-remaining">
-            <span class="header">End time</span>
-            <span class="text">{{ task.end }}</span>
+      <div v-if="!status.isLoading">
+        <div v-if="todayTaskNotCompleted.length > 0">
+          <div
+            class="grid-row-item"
+            v-for="task in todayTaskNotCompleted.slice(0, 3)"
+            :key="task._id"
+          >
+            <div class="task-list">
+              <img src="../assets/list.svg" />
+            </div>
+            <div class="task-name">
+              <span class="header">Task name</span>
+              <span class="text">{{ task.title }}</span>
+            </div>
+            <div class="start">
+              <span class="header">Start time</span>
+              <span class="text"> {{ task.start }}</span>
+            </div>
+            <div class="time-remaining">
+              <span class="header">End time</span>
+              <span class="text">{{ task.end }}</span>
+            </div>
           </div>
         </div>
+        <div v-else>
+          <el-empty description="you don't have any task today"></el-empty>
+        </div>
       </div>
-      <div v-else><BaseSkeleton /></div>
+      <div v-else>
+        <BaseSkeleton />
+      </div>
     </div>
 
     <div class="grid-2">
@@ -117,7 +124,6 @@ import useTask from "@/composables/task";
 import BaseSkeleton from "@/components/BaseSkeleton.vue";
 import { colors } from "@/utils/common";
 import useUserStore from "@/stores/user";
-import { storeToRefs } from "pinia";
 const store = useUserStore();
 const { getTasks, status } = useTask();
 const taskToday = ref([]);
@@ -136,45 +142,51 @@ const getData = async () => {
   const today = await getTasks("Today");
   const personal = await getTasks("Personal");
   const work = await getTasks("Work");
-  taskToday.value = today;
-  taskPersonal.value = personal;
-  taskWork.value = work;
+  taskToday.value = today as any;
+  taskPersonal.value = personal as any;
+  taskWork.value = work as any;
 
   todayTaskNotCompleted.value = taskToday.value.filter(
-    (item) => item.completed !== true
+    (item: any) => item.completed !== true
   );
   // task today length
   notCompleted.value = taskToday.value.filter(
-    (item) => item.completed !== true
+    (item: any) => item.completed !== true
   ).length;
   const completed = taskToday.value.filter(
-    (item) => item.completed === true
+    (item: any) => item.completed === true
   ).length;
-  result.value = Number(
-    ((completed / taskToday.value.length) * 100).toFixed(0)
-  );
+  taskToday.value.length > 0
+    ? (result.value = Number(
+        ((completed / taskToday.value.length) * 100).toFixed(0)
+      ))
+    : (result.value = 0);
 
   //personal length
   personalNotCompleted.value = taskPersonal.value.filter(
-    (item) => item.completed !== true
+    (item: any) => item.completed !== true
   ).length;
   const personalCompleted = taskPersonal.value.filter(
-    (item) => item.completed === true
+    (item: any) => item.completed === true
   ).length;
-  personalPercent.value = Number(
-    ((personalCompleted / taskPersonal.value.length) * 100).toFixed(0)
-  );
+  taskPersonal.value.length > 1
+    ? (personalPercent.value = Number(
+        ((personalCompleted / taskPersonal.value.length) * 100).toFixed(0)
+      ))
+    : (personalPercent.value = 0);
 
   //work length
   workNotCompleted.value = taskWork.value.filter(
-    (item) => item.completed !== true
+    (item: any) => item.completed !== true
   ).length;
   const workCompleted = taskWork.value.filter(
-    (item) => item.completed === true
+    (item: any) => item.completed === true
   ).length;
-  workPercent.value = Number(
-    ((workCompleted / taskWork.value.length) * 100).toFixed(0)
-  );
+  taskWork.value.length > 1
+    ? (workPercent.value = Number(
+        ((workCompleted / taskWork.value.length) * 100).toFixed(0)
+      ))
+    : (workPercent.value = 0);
 
   //overall progress
   const progress = personalCompleted + workCompleted + completed;
@@ -237,7 +249,7 @@ onMounted(() => {
   height: 15vh;
   border-radius: 10px;
   display: grid;
-  grid-template-columns: 1fr 0.5fr 2fr 1fr;
+  grid-template-columns: 1fr 1fr 2fr 1fr;
   grid-auto-flow: columns;
   padding: 15px;
   margin-bottom: 10px;

@@ -1,6 +1,7 @@
 import TaskService from "@/services/Task"
 import { reactive } from "vue";
 import type { FormType } from "@/utils/types";
+import useUserStore from "@/stores/user";
 
 interface Status {
   isLoading: boolean;
@@ -12,7 +13,7 @@ export const status = reactive({} as Status)
 
 const useTask = () => {
   const taskApi = TaskService;
-
+  const { userDetails } = useUserStore();
   const getTasks = async (type?: string) => {
     status.isLoading = true
     const task = await taskApi
@@ -20,21 +21,21 @@ const useTask = () => {
     .then((response) => {
       const result = [];
        if (type === "Today") {
-        const item = response.data.filter((item:any) => item.type === type)
+        const item = response.data.filter((item:any) => item.type === type).filter((item: any) => item.author === userDetails.email)
         result.push(...item)
         return result;
       }
       else if (type === "Work") {
-        const item = response.data.filter((item:any) => item.type === type)
+        const item = response.data.filter((item:any) => item.type === type).filter((item: any) => item.author === userDetails.email)
         result.push(...item)
         return result;
       }
       else if (type === "Personal") {
-        const item = response.data.filter((item:any) => item.type === type)
+        const item = response.data.filter((item:any) => item.type === type).filter((item: any) => item.author === userDetails.email)
         result.push(...item)
         return result;
       } else if(type === "all") {
-        const item = response.data.filter((item: any) => item.completed === true)
+        const item = response.data.filter((item: any) => item.completed === true).filter((item: any) => item.author === userDetails.email)
         result.push(...item)
         return result;
       }

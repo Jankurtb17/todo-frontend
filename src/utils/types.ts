@@ -12,7 +12,7 @@ export interface FormType {
   start: string;
   end: string;
   type: TaskType;
-  author?: string;
+  author: string;
   completed: boolean;
   createdAt?: string;
 }

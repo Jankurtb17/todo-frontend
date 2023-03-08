@@ -6,7 +6,10 @@ const user = auth.currentUser
 
 export const useUserStore = defineStore('user', {
   state: () => ({
-    user: user
+    userDetails: {
+      displayName: user?.displayName,
+      email: user?.email
+    }
   }),
 });
 

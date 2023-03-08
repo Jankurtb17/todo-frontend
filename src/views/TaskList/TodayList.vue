@@ -1,17 +1,22 @@
 <template>
-  <el-timeline-item
-    v-for="task in tasks"
-    :key="task._id"
-    placement="top"
-    :timestamp="task.createdAt"
-    color="#5d3891"
-  >
-    <timeline-item :task="task" size="nornmal" color="#0bbd87">
-      <template #btn>
-        <check-circle-outline class="check" @click="updateTask(task)" />
-      </template>
-    </timeline-item>
-  </el-timeline-item>
+  <div v-if="tasks.length > 0">
+    <el-timeline-item
+      v-for="task in tasks"
+      :key="task._id"
+      placement="top"
+      :timestamp="task.createdAt"
+      color="#5d3891"
+    >
+      <timeline-item :task="task" size="nornmal" color="#0bbd87">
+        <template #btn>
+          <check-circle-outline class="check" @click="updateTask(task)" />
+        </template>
+      </timeline-item>
+    </el-timeline-item>
+  </div>
+  <div v-else>
+    <el-empty description="You don't have any tasks"></el-empty>
+  </div>
 </template>
 
 <script lang="ts" setup>

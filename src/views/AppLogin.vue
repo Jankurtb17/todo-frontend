@@ -274,28 +274,31 @@ const signInWithGoogle = () => {
   position: absolute;
   z-index: 5;
   width: 550px;
-  height: 53.7vh;
+  height: 59.7vh;
 }
 
 .login-enter-from,
 .login-leave-to {
   opacity: 0;
   transform: translateX(100%);
+  height: 59.7vh;
 }
 
 .login-leave-to {
   z-index: -999;
+  height: 59.7vh;
 }
 
 .login-enter-from {
   z-index: 10;
+  height: 59.7vh;
 }
 
 .login-img-enter-active,
 .login-img-leave-active {
   position: absolute;
   width: 550px;
-  height: 53.7vh;
+  height: 59.7vh;
 }
 
 .login-img-enter-from,
@@ -303,14 +306,17 @@ const signInWithGoogle = () => {
   opacity: 0;
   transition: 400ms ease all;
   transform: translateX(0);
+  height: 59.7vh;
 }
 
 .login-img-leave-to {
   z-index: -1;
+  height: 59.7vh;
 }
 
 .login-img-enter-from {
   z-index: 40;
+  height: 59.7vh;
 }
 
 .register-enter-active,
@@ -320,7 +326,7 @@ const signInWithGoogle = () => {
   width: 550px;
   transform: translateX(100%);
   z-index: 100;
-  height: 53.7vh;
+  height: 59.7vh;
 }
 
 .register-enter-from,
@@ -328,6 +334,7 @@ const signInWithGoogle = () => {
   opacity: 0;
   transform: translateX(0);
   z-index: -10;
+  height: 59.7vh;
 }
 
 .register-img-enter-active,
@@ -336,13 +343,14 @@ const signInWithGoogle = () => {
   transform: translateX(100%);
   z-index: 5;
   width: 550px;
-  height: 53.7vh;
+  height: 59.7vh;
 }
 
 .register-img-enter-from,
 .register-img-leave-to {
   opacity: 0;
   z-index: -10;
+  height: 59.7vh;
   transform: translateX(0);
 }
 

@@ -96,7 +96,7 @@
           :percentage="allPercent"
           status="success"
           :stroke-width="20"
-          :width="300"
+          :width="280"
         >
           <template #default="{ percentage }">
             <span class="percentage-value">{{ percentage }}%</span> <br />
@@ -128,7 +128,7 @@ import { colors } from "@/utils/common";
 import useUserStore from "@/stores/user";
 import { storeToRefs } from "pinia";
 const store = useUserStore();
-const { getEmail, displayName } = storeToRefs(store)
+const { getEmail, displayName } = storeToRefs(store);
 const { getTasks, status } = useTask();
 const taskToday = ref([]);
 const taskPersonal = ref([]);
@@ -144,7 +144,6 @@ const todayTaskNotCompleted = ref([]);
 const allPercent = ref();
 const router = useRouter();
 const getData = async () => {
-  console.log(getEmail.value)
   const today = await getTasks("Today");
   const personal = await getTasks("Personal");
   const work = await getTasks("Work");
@@ -196,11 +195,19 @@ const getData = async () => {
   //overall progress
   const progress = personalCompleted + workCompleted + completed;
   const allTaskLength =
-    taskToday.value.length < 0 ? 0 : taskToday.value.length + taskPersonal.value.length < 0 ? 0 : taskPersonal.value.length + taskWork.value.length < 0 ? 0 : taskWork.value.length;
-  if(isNaN(allPercent.value)) {
-    return 0
+    taskToday.value.length < 0
+      ? 0
+      : taskToday.value.length + taskPersonal.value.length < 0
+      ? 0
+      : taskPersonal.value.length + taskWork.value.length < 0
+      ? 0
+      : taskWork.value.length;
+  if (isNaN(allPercent.value)) {
+    return 0;
   } else {
-    return allPercent.value = Number(((progress / allTaskLength) * 100).toFixed(0));
+    return (allPercent.value = Number(
+      ((progress / allTaskLength) * 100).toFixed(0)
+    ));
   }
 };
 

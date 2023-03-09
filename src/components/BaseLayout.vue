@@ -32,7 +32,7 @@
       </el-row>
     </el-aside>
     <el-container>
-      <el-main>
+      <el-main class="main">
         <router-view />
       </el-main>
     </el-container>

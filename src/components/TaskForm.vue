@@ -18,25 +18,25 @@
       </el-form-item>
       <label>Time</label>
       <el-form-item>
-        <div>
+        <div class="time">
           <el-time-select
             v-model="form.start"
-            :max-time="endTime"
+            :max-time="form.end"
             class="mr-4"
             placeholder="Start time"
             start="08:30"
-            step="00:15"
-            end="18:30"
-            style="width: 50%;"
+            step="00:30"
+            end="20:00"
+            style="width: 50%"
           />
           <el-time-select
-            v-model="endTime"
-            :min-time="form.end"
+            v-model="form.end"
+            :min-time="form.start"
             placeholder="End time"
             start="08:30"
-            step="00:15"
-            end="18:30"
-            style="width: 50%"  
+            step="00:30"
+            end="20:00"
+            style="width: 50%"
           />
         </div>
       </el-form-item>
@@ -66,7 +66,7 @@ import type { FormInstance, FormRules } from "element-plus";
 import useTask, { status } from "@/composables/task";
 import { ElMessage } from "element-plus";
 import { message } from "@/utils/common";
-import useUserStore from "@/stores/user"
+import useUserStore from "@/stores/user";
 import { storeToRefs } from "pinia";
 const store = useUserStore();
 const { getEmail } = storeToRefs(store);
@@ -74,8 +74,8 @@ const { postTask } = useTask();
 const form = reactive({} as FormType);
 const ruleRefForm = ref<FormInstance>();
 const dialogVisible = ref(false);
-const startTime = ref('')
-const endTime = ref('')
+const startTime = ref("");
+const endTime = ref("");
 const emit = defineEmits<{
   (e: "closeDialog"): void;
   (e: "cancelDialog", cancel: string): void;
@@ -135,8 +135,8 @@ const submitForm = () => {
   ruleRefForm.value.validate(async (isValid) => {
     if (isValid) {
       form.completed = false;
-      form.author = getEmail.value as any
-      console.log(form)
+      form.author = getEmail.value as any;
+      console.log(form);
       await postTask(form);
       ElMessage({
         message: "Successfully added",

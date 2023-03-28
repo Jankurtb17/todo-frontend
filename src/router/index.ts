@@ -71,14 +71,13 @@ const getCurrentUser = () => {
   });
 };
 
-router.beforeEach(async (to, from, next) => {
-  const auth = getAuth();
+router.beforeEach((to, from, next) => {
+  const auth = getAuth()
   const currentUser = auth.currentUser;
-  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+
   if (requiresAuth && !currentUser) {
-    next("/login");
-  } else if (to.path === "/login" && currentUser) {
-    next("/dashboard");
+    next('/login');
   } else {
     next();
   }

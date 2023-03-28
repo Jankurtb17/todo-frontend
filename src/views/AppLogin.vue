@@ -120,12 +120,12 @@
 
 <script lang="ts" setup>
 import BaseInput from "@/components/BaseInput.vue";
-import { ref, reactive } from "vue";
+import { ref, reactive, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import useUserStore from "@/stores/user";
 import type { FormInstance, FormRules } from "element-plus";
-// import { storeToRefs } from "pinia";
-
+import { getAuth, onAuthStateChanged, setPersistence, browserSessionPersistence } from "firebase/auth";
+import { notification } from "@/utils/common";
 const ruleRefForm = ref<FormInstance>();
 const store = useUserStore();
 const router = useRouter();
@@ -137,7 +137,7 @@ const errLogPassMsg = ref("");
 const errMessage = ref();
 const loginIsVisible = ref(true);
 const registerIsVisible = ref(false);
-
+let auth: any;
 const rules = reactive<FormRules>({
   email: [
     {
@@ -185,27 +185,7 @@ const loginUser = () => {
       router.push("/dashboard");
     })
     .catch((error) => {
-      if (form.value.email !== "" && form.value.password !== "") {
-        switch (error.code) {
-          case "auth/invalid-email":
-            errLogEmailMsg.value = "Please enter a valid email address";
-            errorEmail.value = true;
-            break;
-          case "auth/user-not-found":
-            errLogEmailMsg.value = "No account with that email was found";
-            errorEmail.value = true;
-            break;
-          case "auth/wrong-password":
-            errLogPassMsg.value = "Password is incorrect";
-            errorPassword.value = true;
-            break;
-          default:
-            errLogPassMsg.value = "Email or password is incorrect";
-            errorEmail.value = true;
-            errorPassword.value = true;
-            break;
-        }
-      }
+      notification(error, "error", "Invalid");
     });
 };
 
@@ -217,26 +197,11 @@ const registerUser = () => {
       if (isValid) {
         store
           .registerUser(form.value.email, form.value.password)
-          .then((data) => {
-            console.log(data);
+          .then(() => {
             router.push("/dashboard");
           })
           .catch((error) => {
-            console.log(error.message);
-            if (form.value.email !== "" && form.value.password !== "") {
-              switch (error.code) {
-                case "auth/email-already-in-use":
-                  errEmailMsg.value = "Email already exists";
-                  break;
-                case "auth/invalid-email":
-                  errEmailMsg.value = "Please enter a valid email address";
-                  break;
-                default:
-                  errMessage.value = "";
-                  break;
-              }
-              console.log(errEmailMsg.value);
-            }
+            notification(error, "error", "Invalid");
           });
       }
     });
@@ -246,6 +211,7 @@ const registerUser = () => {
 const signInWithGoogle = () => {
   store.googleLogin().then(() => {
     router.push("/dashboard");
+    localStorage.setItem("isLoggedIn", "true");
   });
 };
 </script>
@@ -358,6 +324,10 @@ const signInWithGoogle = () => {
 .register-form {
   display: none;
 } */
+
+.err-msg {
+  padding: 0 40px;
+}
 
 .left-content,
 .right-content {

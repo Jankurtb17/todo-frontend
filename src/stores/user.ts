@@ -6,27 +6,64 @@ import {
   signOut,
   GoogleAuthProvider,
   signInWithPopup,
+  setPersistence,
+  browserSessionPersistence,
+  inMemoryPersistence
 } from "firebase/auth";
 import { useRouter } from "vue-router";
 const auth = getAuth();
-const router = useRouter();
 const user = auth
 
-export const useUserStore = defineStore("user", {
+const useUserStore = defineStore("user", {
   state: () => ({
-    userDetails: user
+    userDetails: user,
+    creds: "" as any
   }),
   actions: {
     loginUser(email: string, password: string) {
-      this.currentUser = auth.currentUser;
-      this.isAuthenticated = true;
-      const login = signInWithEmailAndPassword(auth, email, password);
-      return login;
+      const login = setPersistence(auth, browserSessionPersistence)
+        .then(() => {
+          return signInWithEmailAndPassword(auth, email, password)
+           .catch((error) => {
+              let err = "";
+              switch (error.code) {
+                case "auth/invalid-email":
+                err = "Please enter a valid email address";
+                break;
+              case "auth/user-not-found":
+                err = "No account with that email was found";
+                break;
+              case "auth/wrong-password":
+                err = "Password is incorrect";
+                break;
+              default:
+                err = "Email or password is incorrect";
+                break;
+              }
+              throw err;
+            })
+        })
+      return login
     },
     registerUser(email: string, password: string) {
-      this.currentUser = auth.currentUser;
-      this.isAuthenticated = true;
-      const register = createUserWithEmailAndPassword(auth, email, password);
+      const register = setPersistence(auth, browserSessionPersistence)
+      .then(() => {
+        return createUserWithEmailAndPassword(auth, email, password)
+          .catch((error) => {
+            let err = "";
+            switch (error.code) {
+              case "auth/email-already-in-use":
+                err = "Email already exists";
+                break;
+              case "auth/invalid-email":
+                err = "Please enter a valid email address";
+                break;
+              default:
+                break;
+            }
+            throw err;
+          })
+      })
       return register;
     },
     async logout() {
@@ -34,14 +71,18 @@ export const useUserStore = defineStore("user", {
     },
     googleLogin() {
       const provider = new GoogleAuthProvider();
-      const google = signInWithPopup(auth, provider)
+      const google = setPersistence(auth, inMemoryPersistence)
+        .then(() => {
+          this.setUser(auth)
+          return signInWithPopup(auth, provider)
+        })
       return google;
     },
+    setUser(user: any) {
+      this.creds = user;
+    }
   },
   getters: {
-    checkAuthentication(state) {
-      return state.isAuthenticated;
-    },
     getEmail(state) {
       return state.userDetails.currentUser?.email
     },

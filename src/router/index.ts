@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory, viewDepthKey } from "vue-router";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import useUserStore from "@/stores/user";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -73,13 +74,19 @@ const getCurrentUser = () => {
 
 router.beforeEach((to, from, next) => {
   const auth = getAuth()
-  const currentUser = auth.currentUser;
+  const data = JSON.parse(localStorage.getItem("creds") as any)
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
-
-  if (requiresAuth && !currentUser) {
-    next('/login');
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (!data) {
+      next({
+        path: '/login',
+        query: { redirect: to.fullPath }
+      })
+    } else {
+      next()
+    }
   } else {
-    next();
+    next()
   }
 });
 

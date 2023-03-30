@@ -76,6 +76,7 @@ const ruleRefForm = ref<FormInstance>();
 const dialogVisible = ref(false);
 const startTime = ref("");
 const endTime = ref("");
+const data = JSON.parse(localStorage.getItem("creds") as any)
 const emit = defineEmits<{
   (e: "closeDialog"): void;
   (e: "cancelDialog", cancel: string): void;
@@ -135,8 +136,7 @@ const submitForm = () => {
   ruleRefForm.value.validate(async (isValid) => {
     if (isValid) {
       form.completed = false;
-      form.author = getEmail.value as any;
-      console.log(form);
+      form.author = data.email as any
       await postTask(form);
       ElMessage({
         message: "Successfully added",

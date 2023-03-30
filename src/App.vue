@@ -21,10 +21,9 @@ let creds: any = ref(null);
 auth = getAuth();
 onMounted(() => {
   onAuthStateChanged(auth, (user: any) => {
-    if (user) {
-      store.setUser(user.auth.currentUser)
-    } else {
-      store.setUser(null)
+    const data = JSON.parse(localStorage.getItem("creds") as any)
+    if(!data) {
+      localStorage.removeItem("creds")
       router.push("/login")
     }
   });

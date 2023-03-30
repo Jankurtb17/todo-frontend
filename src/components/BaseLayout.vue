@@ -68,6 +68,7 @@ const menus = ref([
 let auth: any;
 const logoutUser = () => {
   signOut(auth).then(() => {
+    localStorage.removeItem("creds")
     router.push("/login");
   });
 };

@@ -165,6 +165,7 @@ const getData = async () => {
         ((completed / taskToday.value.length) * 100).toFixed(0)
       ))
     : (result.value = 0);
+   
 
   //personal length
   personalNotCompleted.value = taskPersonal.value.filter(
@@ -195,20 +196,15 @@ const getData = async () => {
   //overall progress
   const progress = personalCompleted + workCompleted + completed;
   const allTaskLength =
-    taskToday.value.length < 0
-      ? 0
-      : taskToday.value.length + taskPersonal.value.length < 0
-      ? 0
-      : taskPersonal.value.length + taskWork.value.length < 0
-      ? 0
-      : taskWork.value.length;
-  if (isNaN(allPercent.value)) {
-    return 0;
-  } else {
-    return (allPercent.value = Number(
+    taskToday.value.length + taskPersonal.value.length + taskWork.value.length;
+ 
+    allPercent.value = Number(
       ((progress / allTaskLength) * 100).toFixed(0)
-    ));
-  }
+      )
+    if(isNaN(allPercent.value)) {
+      return allPercent.value = Number(0)
+    }
+    
 };
 
 const checkIfAuthenticated = () => {

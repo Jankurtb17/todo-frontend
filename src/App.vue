@@ -24,8 +24,7 @@ onMounted(() => {
     const data = JSON.parse(localStorage.getItem("creds") as any)
     if(!data) {
       localStorage.removeItem("creds")
-      router.push("/login")
-    }
+    } 
   });
 });
 </script>

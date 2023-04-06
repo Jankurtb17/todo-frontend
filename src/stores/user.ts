@@ -79,8 +79,6 @@ const useUserStore = defineStore("user", {
       return register;
     },
     async logout() {
-      this.setUser(null);
-      localStorage.removeItem("creds")
       await signOut(auth);
     },
     googleLogin() {

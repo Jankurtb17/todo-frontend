@@ -124,7 +124,7 @@ import { ref, reactive, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import useUserStore from "@/stores/user";
 import type { FormInstance, FormRules } from "element-plus";
-import { getAuth, onAuthStateChanged, setPersistence, browserSessionPersistence } from "firebase/auth";
+import { getAuth, setPersistence, browserSessionPersistence } from "firebase/auth";
 import { notification } from "@/utils/common";
 const ruleRefForm = ref<FormInstance>();
 const store = useUserStore();
@@ -211,9 +211,13 @@ const registerUser = () => {
 const signInWithGoogle = () => {
   store.googleLogin().then(() => {
     router.push("/dashboard");
-    localStorage.setItem("isLoggedIn", "true");
   });
 };
+
+
+onMounted(() => {
+  localStorage.removeItem("creds")
+})
 </script>
 
 <style scoped>

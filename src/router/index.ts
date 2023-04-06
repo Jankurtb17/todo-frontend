@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory, viewDepthKey } from "vue-router";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 import useUserStore from "@/stores/user";
 
 const router = createRouter({
@@ -58,19 +58,6 @@ const router = createRouter({
     },
   ],
 });
-
-const getCurrentUser = () => {
-  return new Promise((resolve, reject) => {
-    const removeListener = onAuthStateChanged(
-      getAuth(),
-      (user) => {
-        removeListener();
-        resolve(user);
-      },
-      reject
-    );
-  });
-};
 
 router.beforeEach((to, from, next) => {
   const auth = getAuth()

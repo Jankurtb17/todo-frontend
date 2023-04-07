@@ -14,6 +14,7 @@ import { onMounted, ref } from "vue";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "vue-router";
 import useUserStore from "./stores/user";
+import useTask from "@/composables/task"
 const store = useUserStore()
 let auth: any;
 const router = useRouter();

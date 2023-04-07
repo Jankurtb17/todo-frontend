@@ -10,6 +10,7 @@ import {
   browserSessionPersistence,
   inMemoryPersistence,
 } from "firebase/auth";
+const data = JSON.parse(localStorage.getItem("creds") as any)
 const auth = getAuth();
 const user = auth;
 
@@ -23,7 +24,7 @@ const useUserStore = defineStore("user", {
       const login = setPersistence(auth, browserSessionPersistence).then(
         () => {
           return signInWithEmailAndPassword(auth, email, password)
-          .then((response: any) => {
+          .then(async (response: any) => {
             localStorage.setItem("creds", JSON.stringify(response.user))
           })
           .catch(
@@ -55,7 +56,7 @@ const useUserStore = defineStore("user", {
         () => {
           this.setUser(auth);
           return createUserWithEmailAndPassword(auth, email, password)
-          .then((response: any) => {
+          .then(async (response: any) => {
             localStorage.setItem("creds", JSON.stringify(response.user))
           })
           .catch(
@@ -86,7 +87,7 @@ const useUserStore = defineStore("user", {
       const google = setPersistence(auth, inMemoryPersistence).then(
         () => {
           return signInWithPopup(auth, provider)
-          .then((response: any) => {
+          .then(async (response: any) => {
             localStorage.setItem("creds", JSON.stringify(response.user))
             this.setUser(response.user)
           });
@@ -99,11 +100,11 @@ const useUserStore = defineStore("user", {
     },
   },
   getters: {
-    getEmail(state) {
-      return state.userDetails.currentUser?.email;
+    getEmail() {
+      return data.email;
     },
     displayName(state) {
-      return state.userDetails.currentUser?.displayName;
+      return data.displayName;
     },
   },
 });

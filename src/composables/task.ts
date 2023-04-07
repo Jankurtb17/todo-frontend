@@ -13,8 +13,9 @@ export const status = reactive({} as Status);
 
 const useTask = () => {
   const taskApi = TaskService;
-  const store = useUserStore();
-  const { getEmail } = storeToRefs(store);
+  const data = JSON.parse(localStorage.getItem("creds") as any)
+  // const store = useUserStore();
+  // const { getEmail } = storeToRefs(store);
   const getTasks = async (type?: string) => {
     status.isLoading = true;
     const task = await taskApi
@@ -24,25 +25,30 @@ const useTask = () => {
         if (type === "Today") {
           const item = response.data
             .filter((item: any) => item.type === type)
-            .filter((item: any) => item.author === getEmail.value);
+            .filter((item: any) => item.author === data.email);
           result.push(...item);
           return result;
         } else if (type === "Work") {
           const item = response.data
             .filter((item: any) => item.type === type)
-            .filter((item: any) => item.author === getEmail.value);
+            .filter((item: any) => item.author === data.email);
           result.push(...item);
           return result;
         } else if (type === "Personal") {
           const item = response.data
             .filter((item: any) => item.type === type)
-            .filter((item: any) => item.author === getEmail.value);
+            .filter((item: any) => item.author === data.email);
           result.push(...item);
           return result;
         } else if (type === "all") {
-          const item = response.data
+            const item = response.data
             .filter((item: any) => item.completed === true)
-            .filter((item: any) => item.author === getEmail.value);
+            .filter((item: any) => item.author === data.email);
+          result.push(...item);
+          return result;
+        } else {
+          const item = response.data
+            .filter((item: any) => item.author === data.email);
           result.push(...item);
           return result;
         }

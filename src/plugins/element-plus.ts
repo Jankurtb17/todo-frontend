@@ -51,6 +51,7 @@ import {
   ElSkeleton,
   ElSkeletonItem,
   ElTimeSelect,
+  ElDrawer,
 } from "element-plus";
 
 import {
@@ -120,10 +121,10 @@ export default (app: App): void => {
     .use(ElDescriptions)
     .use(ElDialog)
     .use(ElSwitch)
-    .use( ElDivider)
+    .use(ElDivider)
     .use(ElOption)
-    .use( ElInputNumber)
-    .use( ElDropdown)
+    .use(ElInputNumber)
+    .use(ElDropdown)
     .use(ElDropdownMenu)
     .use(ElDropdownItem)
     .use(ElPageHeader)
@@ -133,6 +134,7 @@ export default (app: App): void => {
     .use(ElTimeline)
     .use(ElTimelineItem)
     .use(ElSelect)
+    .use(ElDrawer)
     .component("el-icon-zoomin", ZoomIn)
     .component("Edit", Edit)
     .component("Delete", Delete)

@@ -23,7 +23,7 @@
         <template #today>
           <el-scrollbar height="80vh">
             <div class="all" v-loading="status.isLoading" :spinner="customSpinner">
-              <el-timeline>
+              <el-timeline class="today">
                 <TodayList ref="todayList" />
               </el-timeline>
             </div>
@@ -111,4 +111,12 @@ const customSpinner = computed(() => {
 .all {
   padding: 20px 50px 20px 0;
 }
+
+@media only screen and (min-width: 320px) and (max-width: 480px) {
+  .all {
+    padding: 0 0 0 0;
+  }
+}
+
+
 </style>

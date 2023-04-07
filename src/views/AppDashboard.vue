@@ -6,89 +6,104 @@
         <span class="welcome">Welcome Back!</span>
       </div>
       <h1 class="overview">Overview</h1>
-      <div class="grid-cols">
-        <div class="grid-item">
-          <div class="project-text">
-            <div class="today-icon">
-              <img src="../assets/sun.svg" />
+      <el-row :gutter="10">
+        <el-col :lg="8" :xs="24" :sm="24" class="grid-item">
+          <el-card class="cards-task">
+            <div class="project-text">
+              <div class="today-icon">
+                <img src="../assets/sun.svg" />
+              </div>
+              <div class="today-text">
+                <h2>Today</h2>
+                <span>{{ notCompleted }} task</span>
+              </div>
             </div>
-            <div class="today-text">
-              <h2>Today</h2>
-              <span>{{ notCompleted }} task</span>
+            <div>
+              <el-progress :color="colors" :percentage="result" />
             </div>
-          </div>
-          <div>
-            <el-progress :color="colors" :percentage="result" />
-          </div>
-        </div>
-        <div class="grid-item">
-          <div class="project-text">
-            <div class="personal-icon">
-              <img src="../assets/boy.svg" />
+          </el-card>
+        </el-col>
+        <el-col :lg="8" :xs="24" :sm="24" class="grid-item">
+          <el-card class="cards-taks">
+            <div class="project-text">
+              <div class="personal-icon">
+                <img src="../assets/boy.svg" />
+              </div>
+              <div class="personal-text">
+                <h2>Personal</h2>
+                <span>{{ personalNotCompleted }} task</span>
+              </div>
             </div>
-            <div class="personal-text">
-              <h2>Personal</h2>
-              <span>{{ personalNotCompleted }} task</span>
+            <div>
+              <el-progress :color="colors" :percentage="personalPercent" />
             </div>
-          </div>
-          <div>
-            <el-progress :color="colors" :percentage="personalPercent" />
-          </div>
-        </div>
-        <div class="grid-item">
-          <div class="project-text">
-            <div class="work-icon">
-              <img src="../assets/work.svg" />
+          </el-card>
+        </el-col>
+        <el-col :lg="8" :xs="24" :sm="24" class="grid-item">
+          <el-card class="cards-taks">
+            <div class="project-text">
+              <div class="work-icon">
+                <img src="../assets/work.svg" />
+              </div>
+              <div class="work-text">
+                <h2>Work</h2>
+                <span>{{ workNotCompleted }} task</span>
+              </div>
             </div>
-            <div class="work-text">
-              <h2>Work</h2>
-              <span>{{ workNotCompleted }} task</span>
+            <div>
+              <el-progress :color="colors" :percentage="workPercent" />
             </div>
-          </div>
-          <div>
-            <el-progress :color="colors" :percentage="workPercent" />
-          </div>
-        </div>
-      </div>
+          </el-card>
+        </el-col>
+      </el-row>
 
-      <div class="todays-task">
-        <h1 class="task-today">Task Today</h1>
-        <router-link to="/task">See All</router-link>
-      </div>
-      <div v-if="!status.isLoading">
-        <div v-if="todayTaskNotCompleted.length > 0">
-          <div
-            class="grid-row-item"
-            v-for="task in todayTaskNotCompleted.slice(0, 3)"
-            :key="task._id"
-          >
-            <div class="task-list">
-              <img src="../assets/list.svg" />
-            </div>
-            <div class="task-name">
-              <span class="header">Task name</span>
-              <span class="text">{{ task.title }}</span>
-            </div>
-            <div class="start">
-              <span class="header">Start time</span>
-              <span class="text"> {{ task.start }}</span>
-            </div>
-            <div class="time-remaining">
-              <span class="header">End time</span>
-              <span class="text">{{ task.end }}</span>
-            </div>
+      <el-row>
+        <el-col :span="24">
+          <el-row class="todays-task">
+            <h1 class="task-today">Task Today</h1>
+            <router-link to="/task">See All</router-link>
+          </el-row>
+          <div class="tasks" v-if="!status.isLoading">
+            <el-row v-if="todayTaskNotCompleted.length > 0">
+              <el-col :span="24">
+                <div>
+                  <div class="grid-row-item"
+                    v-for="task in todayTaskNotCompleted.slice(0, 3)"
+                    :key="task._id"
+                  >
+                    <div class="task-list">
+                      <img src="../assets/list.svg" />
+                    </div>
+                    <div class="task-name">
+                      <span class="header">Task name</span>
+                      <span class="text">{{ task.title }}</span>
+                    </div>
+                    <div class="start">
+                      <span class="header">Start time</span>
+                      <span class="text"> {{ task.start }}</span>
+                    </div>
+                    <div class="time-remaining">
+                      <span class="header">End time</span>
+                      <span class="text">{{ task.end }}</span>
+                    </div>
+                  </div>
+                </div>
+              </el-col>
+            </el-row>
+            <el-row v-else justify="center">
+              <el-empty description="you don't have any task today"></el-empty>
+            </el-row>
           </div>
-        </div>
-        <div v-else>
-          <el-empty description="you don't have any task today"></el-empty>
-        </div>
-      </div>
-      <div v-else>
-        <BaseSkeleton />
-      </div>
+          <el-row v-else>
+            <el-col :span="24" class="skeleton-load">
+              <BaseSkeleton />
+            </el-col>
+          </el-row>
+        </el-col>
+      </el-row>
     </div>
 
-    <div class="grid-2">
+    <div class="overall">
       <h2>Overall Progress</h2>
       <div class="progress">
         <el-progress
@@ -105,32 +120,53 @@
         </el-progress>
       </div>
       <div>
-        <el-calendar
-          v-model="value"
-          class="calendar"
-          style="
-            --el-calendar-border: var(--el-table-border-none);
-            text-align: center;
-          "
-        />
+        <h2>Recent Updates</h2>
+        <el-scrollbar height="50vh">
+          <div
+            v-for="task in allTasks"
+            :key="task._id"
+            class="task-updates"
+          > 
+            <div class="recent-updates">
+              <div  v-if="task.type === 'Today'" class="task-today-icon">
+                <img src="@/assets/sun.svg" class="" />
+              </div>
+              <div class="task-personal-icon" v-else-if="(task.type === 'Personal')">
+                  <img src="../assets/boy.svg" />
+              </div>
+              <div class="task-work-icon" v-else>
+                  <img src="../assets/work.svg" />
+              </div>
+
+              <div class="recent-title">
+                <h3>{{ task.title }}</h3> 
+                <span :class="[task.completed ? 'completed': 'ongoing']">{{ task.completed !== true ? "Ongoing" : `Completed`}}</span>
+              </div>
+            </div>
+          </div>
+        </el-scrollbar>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import useTask from "@/composables/task";
 import BaseSkeleton from "@/components/BaseSkeleton.vue";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "vue-router";
 import { colors } from "@/utils/common";
 import useUserStore from "@/stores/user";
+import usePost from "@/stores/post";
 import { storeToRefs } from "pinia";
+import type { FormType, TaskType } from "@/utils/types";
 const store = useUserStore();
+const postStore = usePost();
+const { post, task, taskDone } = storeToRefs(postStore);
 const { getEmail, displayName } = storeToRefs(store);
 const { getTasks, status } = useTask();
 const taskToday = ref([]);
+const drawer = ref(false)
 const taskPersonal = ref([]);
 const taskWork = ref([]);
 const notCompleted = ref(0);
@@ -140,13 +176,17 @@ const personalPercent = ref();
 const personalNotCompleted = ref(0);
 const value = ref(new Date());
 const result = ref();
-const todayTaskNotCompleted = ref([]);
+const todayTaskNotCompleted = ref([] as any);
+const allTasks = ref([] as FormType[]);
 const allPercent = ref();
+const taskType = ref({} as TaskType)
 const router = useRouter();
 const getData = async () => {
   const today = await getTasks("Today");
   const personal = await getTasks("Personal");
   const work = await getTasks("Work");
+  allTasks.value = await getTasks("alls");
+  // taskToday.value = task
   taskToday.value = today as any;
   taskPersonal.value = personal as any;
   taskWork.value = work as any;
@@ -165,7 +205,6 @@ const getData = async () => {
         ((completed / taskToday.value.length) * 100).toFixed(0)
       ))
     : (result.value = 0);
-   
 
   //personal length
   personalNotCompleted.value = taskPersonal.value.filter(
@@ -197,32 +236,44 @@ const getData = async () => {
   const progress = personalCompleted + workCompleted + completed;
   const allTaskLength =
     taskToday.value.length + taskPersonal.value.length + taskWork.value.length;
- 
-    allPercent.value = Number(
-      ((progress / allTaskLength) * 100).toFixed(0)
-      )
-    if(isNaN(allPercent.value)) {
-      return allPercent.value = Number(0)
-    }
-    
+
+  allPercent.value = Number(((progress / allTaskLength) * 100).toFixed(0));
+  if (isNaN(allPercent.value)) {
+    return (allPercent.value = Number(0));
+  }
+
 };
 
-const checkIfAuthenticated = () => {
-  const auth = getAuth();
-  auth.onAuthStateChanged((user) => {
-    if (!user) {
-      router.push("/login");
-    }
-  });
-};
+const getType = (type: any): string => {
+  if(type === "Today") {
+    return type
+  } else if(type === "Personal") {
+    return type
+  } else if(type === "Work") {
+    return type
+  }
+  return type
+}
+
 
 onMounted(() => {
   getData();
-  checkIfAuthenticated();
 });
 </script>
 
 <style scoped>
+
+.menu-icon {
+  display: none;
+}
+.grid {
+  display: grid;
+  grid-auto-columns: 2fr 1fr;
+  grid-gap: 20px;
+  grid-auto-flow: column;
+  column-gap: 20px;
+}
+
 .grid-1 {
   position: relative;
   top: -1.5em;
@@ -245,25 +296,19 @@ onMounted(() => {
   top: -2em;
   color: #8c8c8c;
 }
-.grid {
-  display: grid;
-  grid-auto-columns: 2fr 1fr;
-  grid-gap: 20px;
-  grid-auto-flow: column;
-  column-gap: 20px;
-}
 
 .grid-cols {
-  display: grid;
-  grid-auto-columns: 1fr;
-  grid-gap: 10px;
-  grid-auto-flow: column;
+  /* display: grid; */
+  /* grid-auto-columns: 1fr; */
+  /* grid-gap: 10px; */
+  /* grid-auto-flow: column; */
 }
 .grid-item {
-  box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
-  height: 150px;
-  border-radius: 10px;
-  padding-left: 20px;
+  /* box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px; */
+  /* height: 150px; */
+  /* border-radius: 10px; */
+  /* padding-left: 50px; */
+  margin-bottom: 10px;
 }
 
 .grid-row-item {
@@ -274,15 +319,24 @@ onMounted(() => {
   grid-template-columns: 1fr 1fr 2fr 1fr;
   grid-auto-flow: columns;
   padding: 15px;
+  border-radius: 0;
   margin-bottom: 10px;
-}
+  /* border-bottom: 1px solid var(--el-border-color); */
+  }
 
 .grid-row-item .header {
   font-weight: bold;
   font-size: 20px;
 }
 
+.tasks,
+.skeleton-load {
+  margin-top: 30px;
+}
+
 .todays-task {
+  position: relative;
+  top: 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -395,6 +449,25 @@ onMounted(() => {
   align-items: center;
 }
 
+.recent-updates{
+  display: grid;
+  grid-template-columns: .5fr 2fr;
+  gap: 20px;
+}
+ 
+.recent-title {
+  display: flex;
+  flex-direction: column;
+}
+
+.completed {
+  color: #67c23a;
+}
+
+.ongoing {
+  color: #909399;
+}
+
 .material-symbols-sharp {
   font-size: 50px;
 }
@@ -459,5 +532,65 @@ th {
   background-position: bottom right;
   width: 56%;
   background-size: cover;
+}
+
+.task-updates{
+  padding: 10px;
+}
+
+.task-today-icon {
+  background-color: #5d3891;
+  padding: 10px;
+  border-radius: 15px;
+  display: flex;
+  height: 6em;
+}
+
+.task-personal-icon {
+  background-color: #f99417;
+  padding: 10px;
+  border-radius: 15px;
+  display: flex;
+  height: 6em;
+}
+
+.task-work-icon {
+  background-color: #e8e2e2;
+  padding: 10px;
+  border-radius: 15px;
+  display: flex;
+  height: 6em;
+}
+
+.task-title {
+  font-size: 18px;
+  color:#8c8c8c;
+}
+
+@media only screen and (min-width: 320px) and (max-width: 480px) {
+
+  .menu-icon {
+    display: block;
+    position: absolute;
+    top: 10px;
+    color: gray;
+    cursor: pointer;
+  }
+
+  .grid {
+    display: grid;
+    grid-auto-columns: 1fr 1fr;
+    grid-gap: 20px;
+    grid-auto-flow: column;
+    column-gap: 20px;
+  }
+
+  .grid-1 {
+    padding-left: 0;
+  }
+
+  .overall {
+    display: none;
+  }
 }
 </style>

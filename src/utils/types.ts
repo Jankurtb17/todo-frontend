@@ -1,8 +1,7 @@
 export interface TaskType {
-  personal: string;
-  work: string;
-  today: string;
-  week: string;
+  personal: "personal";
+  work: "work";
+  today: "today";
 }
 
 export interface FormType {
@@ -11,8 +10,9 @@ export interface FormType {
   description: string;
   start: string;
   end: string;
-  type: TaskType;
+  type: string;
   author: string;
   completed: boolean;
   createdAt?: string;
+  updatedAt?: string;
 }

@@ -6,6 +6,7 @@ import AccountCircleIcon from "vue-material-design-icons/AccountCircle.vue";
 import WhiteBalanceSunnyIcon from "vue-material-design-icons/WhiteBalanceSunny.vue";
 import BriefcaseOutlineIcon from "vue-material-design-icons/BriefcaseOutline.vue";
 import DeleteCircleIcon from "vue-material-design-icons/DeleteCircle.vue";
+import MenuIcon from "vue-material-design-icons/Menu.vue"
 export default (app: App): void => {
   app
     .component("check-circle-outline", CheckCircleOutlineIcon)
@@ -14,5 +15,6 @@ export default (app: App): void => {
     .component("account-circle", AccountCircleIcon)
     .component("sunny-icon", WhiteBalanceSunnyIcon)
     .component("briefcase", BriefcaseOutlineIcon)
-    .component("delete-circle", DeleteCircleIcon);
+    .component("delete-circle", DeleteCircleIcon)
+    .component("menu-icon", MenuIcon)
 };

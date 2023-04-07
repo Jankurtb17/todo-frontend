@@ -66,16 +66,9 @@ import type { FormInstance, FormRules } from "element-plus";
 import useTask, { status } from "@/composables/task";
 import { ElMessage } from "element-plus";
 import { message } from "@/utils/common";
-import useUserStore from "@/stores/user";
-import { storeToRefs } from "pinia";
-const store = useUserStore();
-const { getEmail } = storeToRefs(store);
 const { postTask } = useTask();
 const form = reactive({} as FormType);
 const ruleRefForm = ref<FormInstance>();
-const dialogVisible = ref(false);
-const startTime = ref("");
-const endTime = ref("");
 const data = JSON.parse(localStorage.getItem("creds") as any)
 const emit = defineEmits<{
   (e: "closeDialog"): void;

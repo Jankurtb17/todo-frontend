@@ -2,7 +2,7 @@
   <div class="grid">
     <div class="grid-1">
       <div class="welcome-text">
-        <h1>Hello {{ displayName }}</h1>
+        <h1>Hello {{ data.displayName }}</h1>
         <span class="welcome">Welcome Back!</span>
       </div>
       <h1 class="overview">Overview</h1>
@@ -154,19 +154,13 @@
 import { ref, onMounted } from "vue";
 import useTask from "@/composables/task";
 import BaseSkeleton from "@/components/BaseSkeleton.vue";
-import { useRouter } from "vue-router";
 import { colors } from "@/utils/common";
 import useUserStore from "@/stores/user";
-import usePost from "@/stores/post";
-import { storeToRefs } from "pinia";
 import type { FormType, TaskType } from "@/utils/types";
+const data = JSON.parse(localStorage.getItem("creds") as any)
 const store = useUserStore();
-const postStore = usePost();
-const { post, task, taskDone } = storeToRefs(postStore);
-const { getEmail, displayName } = storeToRefs(store);
 const { getTasks, status } = useTask();
 const taskToday = ref([]);
-const drawer = ref(false)
 const taskPersonal = ref([]);
 const taskWork = ref([]);
 const notCompleted = ref(0);
@@ -174,13 +168,10 @@ const workNotCompleted = ref(0);
 const workPercent = ref();
 const personalPercent = ref();
 const personalNotCompleted = ref(0);
-const value = ref(new Date());
 const result = ref();
 const todayTaskNotCompleted = ref([] as any);
 const allTasks = ref([] as FormType[]);
 const allPercent = ref();
-const taskType = ref({} as TaskType)
-const router = useRouter();
 const getData = async () => {
   const today = await getTasks("Today");
   const personal = await getTasks("Personal");
@@ -241,20 +232,8 @@ const getData = async () => {
   if (isNaN(allPercent.value)) {
     return (allPercent.value = Number(0));
   }
-
+  console.log(data)
 };
-
-const getType = (type: any): string => {
-  if(type === "Today") {
-    return type
-  } else if(type === "Personal") {
-    return type
-  } else if(type === "Work") {
-    return type
-  }
-  return type
-}
-
 
 onMounted(() => {
   getData();

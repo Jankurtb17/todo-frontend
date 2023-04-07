@@ -103,9 +103,9 @@ const useUserStore = defineStore("user", {
     getEmail() {
       return data.email;
     },
-    displayName(state) {
-      return data.displayName;
-    },
+    // displayName() {
+    //   return data.displayName;
+    // },
   },
 });
 

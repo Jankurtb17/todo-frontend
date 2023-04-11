@@ -8,6 +8,7 @@ import {
   signInWithPopup,
   setPersistence,
   browserSessionPersistence,
+  sendPasswordResetEmail,
   inMemoryPersistence,
 } from "firebase/auth";
 const data = JSON.parse(localStorage.getItem("creds") as any)
@@ -94,6 +95,32 @@ const useUserStore = defineStore("user", {
         }
       );
       return google;
+    },
+    resetPassword(email: string) {
+      const actionCodeSettings = {
+        url: "http://localhost:5173/change-password",
+        handleCodeInApp: true,
+      };
+      const reset = sendPasswordResetEmail(auth, email, actionCodeSettings)
+        .catch((error) => {
+          let err = "";
+          switch (error.code) {
+            case "auth/invalid-email":
+              err = "Please enter a valid email address";
+              break;
+            case "auth/user-not-found":
+              err = "No account with that email was found";
+              break;
+            case "auth/wrong-password":
+              err = "Password is incorrect";
+              break;
+            default:
+              err = "Email or password is incorrect";
+              break;
+          }
+          throw err;
+        })
+      return reset;
     },
     setUser(user: any) {
       this.creds = user;

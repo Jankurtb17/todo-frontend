@@ -1,5 +1,6 @@
 <template>
   <router-view name="Login" class="router-view"> </router-view>
+  <router-view name="Reset" class="router-view"> </router-view>
   <router-view name="Content" class="router-view" v-slot="{ Component, route }">
     <Transition name="page-up" mode="out-in">
       <div :key="route.name">
@@ -12,12 +13,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { useRouter } from "vue-router";
-import useUserStore from "./stores/user";
-import useTask from "@/composables/task"
-const store = useUserStore()
 let auth: any;
-const router = useRouter();
 let creds: any = ref(null);
 auth = getAuth();
 onMounted(() => {

@@ -6,112 +6,29 @@
           <div class="login">
             <transition name="login">
               <div class="login-form left-content" v-if="loginIsVisible">
-                <h1 class="main-text">Welcome</h1>
+                <h1 class="main-text">Forgot your password</h1>
                 <el-form v-model="form" :rules="rules">
-                  <el-row class="login-google" @click="signInWithGoogle">
-                    <img src="@/assets/GoogleIcon.svg" class="google-icon" />
-                    <span>Sign in with google</span>
-                  </el-row>
-                  <div class="group">
-                    <div class="item line"></div>
-                    <div class="item text">or login with email</div>
-                    <div class="item line"></div>
-                  </div>
                   <div>
                     <BaseInput
                       v-model="form.email"
-                      placeholder="Enter email"
+                      placeholder="Please enter your email"
                       clearable
                       style="height: 45px"
                     />
                     <div class="err-email">{{ errLogEmailMsg }}</div>
-                    <BaseInput
-                      v-model="form.password"
-                      placeholder="Enter password"
-                      type="password"
-                      style="height: 45px"
-                      clearable
-                    />
-                    <div class="err-email">{{ errLogPassMsg }}</div>
-                    <div class="forgot-password">
-                      <router-link to="/reset">Forgot Password?</router-link>
-                    </div>
                   </div>
                   <el-button
                     style="width: 100%"
                     class="btn btn-login"
-                    @click="loginUser"
-                    >Sign In</el-button
+                    @click="resetPassword"
+                    >Reset Password</el-button
                   >
-
-                  <div class="login-register">
-                    <div>
-                      Don't have an account yet? Register
-                      <span @click="changeForm" class="register-link">here</span>
-                    </div>
-                  </div>
                 </el-form>
               </div>
             </transition>
             <transition name="login-img">
               <div class="login-img" v-if="loginIsVisible">
                 <img src="@/assets/task.svg" v-if="loginIsVisible" />
-              </div>
-            </transition>
-            <transition name="register-img">
-              <div class="register-img" v-if="registerIsVisible">
-                <img src="@/assets/task.svg" />
-              </div>
-            </transition>
-            <transition name="register">
-              <div class="register-form right-content" v-if="registerIsVisible">
-                <h1 class="main-text">Create an account</h1>
-                <el-form ref="ruleRefForm" :model="form" :rules="rules">
-                  <el-row class="login-google" @click="signInWithGoogle">
-                    <img src="@/assets/GoogleIcon.svg" class="google-icon" />
-                    <span>REGISTER WITH GOOGLE</span>
-                  </el-row>
-                  <div class="group">
-                    <div class="item line"></div>
-                    <div class="item text">or register with email</div>
-                    <div class="item line"></div>
-                  </div>
-                  <div>
-                    <BaseInput
-                      v-model="form.email"
-                      placeholder="Enter email"
-                      clearable
-                      prop="email"
-                      style="height: 45px"
-                    />
-                    <transition name="err">
-                      <div class="err-email">
-                        {{ errEmailMsg }}
-                      </div>
-                    </transition>
-                    <BaseInput
-                      v-model="form.password"
-                      placeholder="Enter password"
-                      type="password"
-                      prop="password"
-                      style="height: 45px"
-                      clearable
-                    />
-                  </div>
-                  <el-button
-                    style="width: 100%"
-                    class="btn btn-login"
-                    @click="registerUser"
-                    >Register</el-button
-                  >
-
-                  <div class="login-register">
-                    <div>
-                      Already have an account? login
-                      <span @click="changeForm">here</span>
-                    </div>
-                  </div>
-                </el-form>
               </div>
             </transition>
           </div>
@@ -124,22 +41,15 @@
 <script lang="ts" setup>
 import BaseInput from "@/components/BaseInput.vue";
 import { ref, reactive, onMounted } from "vue";
-import { useRouter } from "vue-router";
 import useUserStore from "@/stores/user";
 import type { FormInstance, FormRules } from "element-plus";
-import { getAuth, setPersistence, browserSessionPersistence } from "firebase/auth";
 import { notification } from "@/utils/common";
+import { useRouter } from "vue-router";
+const router = useRouter();
 const ruleRefForm = ref<FormInstance>();
 const store = useUserStore();
-const router = useRouter();
-const errorEmail = ref(false);
-const errorPassword = ref(false);
-const errEmailMsg = ref("");
 const errLogEmailMsg = ref("");
-const errLogPassMsg = ref("");
-const errMessage = ref();
 const loginIsVisible = ref(true);
-const registerIsVisible = ref(false);
 let auth: any;
 const rules = reactive<FormRules>({
   email: [
@@ -173,50 +83,19 @@ let form = ref<SignIn>({
   password: "",
 });
 
-const changeForm = () => {
-  loginIsVisible.value = !loginIsVisible.value;
-  registerIsVisible.value = !registerIsVisible.value;
-  form.value.email = "";
-  form.value.password = "";
-  errEmailMsg.value = "";
-};
-
-const loginUser = () => {
+const resetPassword = () => {
   store
-    .loginUser(form.value.email, form.value.password)
+    .resetPassword(form.value.email)
     .then(() => {
-      router.push("/dashboard");
+      notification("Kindly check your email", "success", "Success")
+      setTimeout(() => {
+        router.push("/login")
+      }, 2000)
     })
     .catch((error) => {
-      notification(error, "error", "Invalid");
-    });
+      notification(error, "error", "Invalid")
+    })
 };
-
-const registerUser = () => {
-  if (ruleRefForm.value === undefined) {
-    return;
-  } else {
-    ruleRefForm.value.validate((isValid: boolean) => {
-      if (isValid) {
-        store
-          .registerUser(form.value.email, form.value.password)
-          .then(() => {
-            router.push("/dashboard");
-          })
-          .catch((error) => {
-            notification(error, "error", "Invalid");
-          });
-      }
-    });
-  }
-};
-
-const signInWithGoogle = () => {
-  store.googleLogin().then(() => {
-    router.push("/dashboard");
-  });
-};
-
 
 onMounted(() => {
   localStorage.removeItem("creds")
@@ -345,10 +224,10 @@ onMounted(() => {
 .main-text {
   text-align: center;
   font-size: 35px;
-  padding-top: 25px;
+  padding-top: 55px;
 }
 .el-form {
-  padding: 0 40px;
+  padding: 50px 40px;
 }
 
 .pl-10 {
@@ -366,18 +245,11 @@ onMounted(() => {
   border-radius: 4px;
 }
 
-.login-google span {
-  letter-spacing: 0.8px;
-}
-
 .google-icon {
   margin-right: 5px;
   font-size: 18px;
 }
 
-.el-form {
-  padding-top: 30px;
-}
 
 .group {
   margin: 20px 0;
@@ -393,7 +265,7 @@ onMounted(() => {
   white-space: nowrap;
   width: 1%;
   padding: 0 10px;
-  /* text-transform: uppercase; */
+  text-transform: uppercase;
   letter-spacing: 3px;
 }
 
@@ -408,6 +280,7 @@ onMounted(() => {
 }
 
 .btn-login {
+  margin-top: 15px;
   background-color: #f26419;
   color: white;
   border-color: #f26419;
@@ -415,26 +288,9 @@ onMounted(() => {
   letter-spacing: 2px;
 }
 
-.forgot-password {
-  position: relative;
-  top: -10px;
-  display: flex;
-  justify-content: end;
-}
-
-.forgot-password a {
-  text-decoration: none;
-  color: #fff;
-}
-
 .login-register {
   padding-top: 50px;
   text-align: center;
-}
-
-.register-link {
-  text-decoration: underline;
-  cursor: pointer;
 }
 
 .register-link {

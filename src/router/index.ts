@@ -6,6 +6,10 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
+      path: "/",
+      redirect: "/login",
+    },
+    {
       path: "/login",
       name: "main-login",
       components: {
@@ -13,8 +17,18 @@ const router = createRouter({
       },
     },
     {
-      path: "/",
-      redirect: "/login",
+      path: "/reset",
+      name: "rest-password",
+      components: {
+        Reset: () => import("@/views/AppReset.vue")
+      }
+    },
+    {
+      path: "/change-password",
+      name: "change-password",
+      components: {
+        Reset: () => import("@/views/AppChangePassword.vue")
+      }
     },
     // {
     //   path: "/login",

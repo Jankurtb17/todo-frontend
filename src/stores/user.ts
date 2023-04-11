@@ -9,6 +9,7 @@ import {
   setPersistence,
   browserSessionPersistence,
   sendPasswordResetEmail,
+  updatePassword,
   inMemoryPersistence,
 } from "firebase/auth";
 const data = JSON.parse(localStorage.getItem("creds") as any)
@@ -121,6 +122,9 @@ const useUserStore = defineStore("user", {
           throw err;
         })
       return reset;
+    },
+    changePassword(password: string) {
+      // const changePass = 
     },
     setUser(user: any) {
       this.creds = user;

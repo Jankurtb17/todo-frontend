@@ -11,7 +11,7 @@
                    <div>
                     <BaseInput
                       prop="password"
-                      v-model="form.password"
+                      v-model="form.code"
                       placeholder="Enter code"
                       clearable
                       style="height: 45px"

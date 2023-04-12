@@ -99,19 +99,17 @@ const useUserStore = defineStore("user", {
       return google;
     },
     resetPassword(email: string) {
-      const passwordUrl = 'https://localhost/change-password'
-      const reset = sendPasswordResetEmail(auth, email, { url: passwordUrl })
+      // const actionCode = {
+      //   url: `https://localhost/change-password?code=${this.generateVerificationCode}`,
+      //   handleCodeInApp: true
+      // } 
+      // const reset = sendPasswordResetEmail(auth, email, actionCode)
+      const reset = sendPasswordResetEmail(auth, email)
         .catch((error) => {
           let err = "";
           switch (error.code) {
-            case "auth/invalid-email":
-              err = "Please enter a valid email address";
-              break;
-            case "auth/user-not-found":
-              err = "No account with that email was found";
-              break;
-            case "auth/wrong-password":
-              err = "Password is incorrect";
+            case "400":
+              err = "Verification code invalid";
               break;
             default:
               err = "Email or password is incorrect";
@@ -121,9 +119,12 @@ const useUserStore = defineStore("user", {
         })
       return reset;
     },
-    verifyPassword(code: any) {
-      const verify = verifyPasswordResetCode(auth, code)
-        .catch((error) => {
+    verifyPassword(newPassword: string) {
+      const verify = verifyPasswordResetCode(auth, newPassword)
+        .then((response) => {
+          localStorage.setItem("creds", JSON.stringify(auth))
+        })
+        .catch((error) => { 
           console.log(error)
         })
         return verify;
@@ -139,6 +140,11 @@ const useUserStore = defineStore("user", {
     getEmail() {
       return data.email;
     },
+    generateVerificationCode() {
+      const min = 100000
+      const max = 999999
+      return Math.floor(Math.random() * (max - min + 1)) + min
+    }
     // displayName() {
     //   return data.displayName;
     // },

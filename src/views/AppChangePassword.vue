@@ -7,29 +7,12 @@
             <transition name="login">
               <div class="login-form left-content" v-if="loginIsVisible">
                 <h1 class="main-text">Change Password</h1>
-                <el-form :model="form" v-if="!codeIsvalid">
-                   <div>
-                    <BaseInput
-                      prop="password"
-                      v-model="form.code"
-                      placeholder="Enter code"
-                      clearable
-                      style="height: 45px"
-                    />
-                    <!-- <div class="err-email">{{ errorPassword }}</div> -->
-                  </div>
-                  <el-button
-                    style="width: 100%"
-                    class="btn btn-login"
-                    @click="verifyResetCode"
-                    >Enter Code</el-button
-                  >
-                </el-form>
-                <el-form ref="ruleRefForm" :model="form" :rules="rules" v-if="codeIsvalid">
+                <el-form ref="ruleRefForm" :model="form" :rules="rules">
                   <div>
                     <BaseInput
                       prop="password"
                       v-model="form.password"
+                      type="password"
                       placeholder="Please your new password"
                       clearable
                       style="height: 45px"
@@ -37,6 +20,7 @@
                     <BaseInput
                       prop="confirmPassword"
                       v-model="form.confirmPassword"
+                      type="password"
                       placeholder="confirm your password"
                       clearable
                       style="height: 45px"
@@ -70,39 +54,24 @@ import { ref, reactive, onMounted } from "vue";
 import useUserStore from "@/stores/user";
 import type { FormInstance, FormRules } from "element-plus";
 import { notification } from "@/utils/common";
-import { useUrlSearchParams  } from '@vueuse/core'
 import { useRouter } from "vue-router";
 import { computed } from "@vue/reactivity";
-const { code } = useUrlSearchParams('history')
 const router = useRouter();
 const ruleRefForm = ref<FormInstance>();
 const store = useUserStore();
 const errLogEmailMsg = ref("");
 const loginIsVisible = ref(true);
-let codeIsvalid = ref(false)
 let auth: any;
 
-type ResetPassword = {
+type SignIn = {
   confirmPassword: string;
   password: string;
-  code?: string
 };
-let form = ref<ResetPassword>({
+let form = ref<SignIn>({
   password: "",
-  confirmPassword: "",
-  code: ""
+  confirmPassword: ""
 });
 
-const verifyResetCode = () => {
-  store.verifyPassword(code)
-  .then(() => {
-    codeIsvalid.value = true
-  })
-  .catch((error) => {
-    codeIsvalid.value = false
-    notification(error, "Error", "Invalid")
-  })
-}
 
 const validatePass = (rule: any, value: any, callback: any) => {
   if (value === '') {
@@ -134,7 +103,13 @@ const changePassword = (formEl: FormInstance | undefined) => {
   if (!formEl) return
   formEl.validate((valid) => {
     if (valid) {
-      console.log('submit!')
+      store.verifyPassword(form.value.password)
+        .then(() => {
+          router.push("/dashboard")
+        })
+        .catch((error) => {
+          notification(error, "error", "Invalid")
+        })
     } else {
       console.log('error submit!')
       return false

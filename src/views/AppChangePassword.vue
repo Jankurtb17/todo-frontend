@@ -7,7 +7,25 @@
             <transition name="login">
               <div class="login-form left-content" v-if="loginIsVisible">
                 <h1 class="main-text">Change Password</h1>
-                <el-form ref="ruleRefForm" :model="form" :rules="rules">
+                <el-form :model="form" v-if="!codeIsvalid">
+                   <div>
+                    <BaseInput
+                      prop="password"
+                      v-model="form.password"
+                      placeholder="Enter code"
+                      clearable
+                      style="height: 45px"
+                    />
+                    <!-- <div class="err-email">{{ errorPassword }}</div> -->
+                  </div>
+                  <el-button
+                    style="width: 100%"
+                    class="btn btn-login"
+                    @click="verifyResetCode"
+                    >Enter Code</el-button
+                  >
+                </el-form>
+                <el-form ref="ruleRefForm" :model="form" :rules="rules" v-if="codeIsvalid">
                   <div>
                     <BaseInput
                       prop="password"
@@ -52,24 +70,39 @@ import { ref, reactive, onMounted } from "vue";
 import useUserStore from "@/stores/user";
 import type { FormInstance, FormRules } from "element-plus";
 import { notification } from "@/utils/common";
+import { useUrlSearchParams  } from '@vueuse/core'
 import { useRouter } from "vue-router";
 import { computed } from "@vue/reactivity";
+const { code } = useUrlSearchParams('history')
 const router = useRouter();
 const ruleRefForm = ref<FormInstance>();
 const store = useUserStore();
 const errLogEmailMsg = ref("");
 const loginIsVisible = ref(true);
+let codeIsvalid = ref(false)
 let auth: any;
 
-type SignIn = {
+type ResetPassword = {
   confirmPassword: string;
   password: string;
+  code?: string
 };
-let form = ref<SignIn>({
+let form = ref<ResetPassword>({
   password: "",
-  confirmPassword: ""
+  confirmPassword: "",
+  code: ""
 });
 
+const verifyResetCode = () => {
+  store.verifyPassword(code)
+  .then(() => {
+    codeIsvalid.value = true
+  })
+  .catch((error) => {
+    codeIsvalid.value = false
+    notification(error, "Error", "Invalid")
+  })
+}
 
 const validatePass = (rule: any, value: any, callback: any) => {
   if (value === '') {

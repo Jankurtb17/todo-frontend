@@ -9,7 +9,8 @@ import {
   setPersistence,
   browserSessionPersistence,
   sendPasswordResetEmail,
-  updatePassword,
+  verifyPasswordResetCode,
+  confirmPasswordReset,
   inMemoryPersistence,
 } from "firebase/auth";
 const data = JSON.parse(localStorage.getItem("creds") as any)
@@ -98,11 +99,8 @@ const useUserStore = defineStore("user", {
       return google;
     },
     resetPassword(email: string) {
-      const actionCodeSettings = {
-        url: "http://localhost:5173/change-password",
-        handleCodeInApp: true,
-      };
-      const reset = sendPasswordResetEmail(auth, email, actionCodeSettings)
+      const passwordUrl = 'https://localhost/change-password'
+      const reset = sendPasswordResetEmail(auth, email, { url: passwordUrl })
         .catch((error) => {
           let err = "";
           switch (error.code) {
@@ -122,6 +120,13 @@ const useUserStore = defineStore("user", {
           throw err;
         })
       return reset;
+    },
+    verifyPassword(code: any) {
+      const verify = verifyPasswordResetCode(auth, code)
+        .catch((error) => {
+          console.log(error)
+        })
+        return verify;
     },
     changePassword(password: string) {
       // const changePass = 

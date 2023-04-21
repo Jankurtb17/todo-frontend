@@ -126,11 +126,17 @@ const useUserStore = defineStore("user", {
         })
         .catch((error) => { 
           console.log(error)
+          throw error;
         })
         return verify;
     },
-    changePassword(password: string) {
-      // const changePass = 
+    changePassword(oobCode: string, password: string) {
+      const changePass = confirmPasswordReset(auth, oobCode, password)
+      .catch((error) => { 
+        console.log(error)
+        throw error;
+      })
+      return changePass;
     },
     setUser(user: any) {
       this.creds = user;

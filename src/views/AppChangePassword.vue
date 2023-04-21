@@ -6,7 +6,7 @@
           <div class="login">
             <transition name="login">
               <div class="login-form left-content" v-if="loginIsVisible">
-                <h1 class="main-text">Change Password</h1>
+                <h1 class="main-text">Change Password </h1>
                 <el-form ref="ruleRefForm" :model="form" :rules="rules">
                   <div>
                     <BaseInput
@@ -54,9 +54,10 @@ import { ref, reactive, onMounted } from "vue";
 import useUserStore from "@/stores/user";
 import type { FormInstance, FormRules } from "element-plus";
 import { notification } from "@/utils/common";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { computed } from "@vue/reactivity";
 const router = useRouter();
+const route = useRoute();
 const ruleRefForm = ref<FormInstance>();
 const store = useUserStore();
 const errLogEmailMsg = ref("");
@@ -103,7 +104,7 @@ const changePassword = (formEl: FormInstance | undefined) => {
   if (!formEl) return
   formEl.validate((valid) => {
     if (valid) {
-      store.verifyPassword(form.value.password)
+      store.changePassword(route.query.oobCode as string, form.value.password)
         .then(() => {
           router.push("/dashboard")
         })

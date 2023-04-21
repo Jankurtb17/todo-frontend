@@ -122,29 +122,34 @@
       <div>
         <h2>Recent Updates</h2>
         <el-scrollbar height="50vh">
-          <div v-if="allTasks.length > 0 && !status.isLoading">
-            <div
-              v-for="task in allTasks"
-              :key="task._id"
-              class="task-updates"
-            > 
-              <div class="recent-updates">
-                <div  v-if="task.type === 'Today'" class="task-today-icon">
-                  <img src="@/assets/sun.svg" class="" />
-                </div>
-                <div class="task-personal-icon" v-else-if="(task.type === 'Personal')">
-                    <img src="../assets/boy.svg" />
-                </div>
-                <div class="task-work-icon" v-else>
-                    <img src="../assets/work.svg" />
-                </div>
-  
-                <div class="recent-title">
-                  <h3>{{ task.title }}</h3> 
-                  <span :class="[task.completed ? 'completed': 'ongoing']">{{ task.completed !== true ? "Ongoing" : `Completed`}}</span>
+          <div v-if="!status.isLoading">
+            <el-row v-if="allTasks.length > 0">
+              <div
+                v-for="task in allTasks"
+                :key="task._id"
+                class="task-updates"
+              > 
+                <div class="recent-updates">
+                  <div  v-if="task.type === 'Today'" class="task-today-icon">
+                    <img src="@/assets/sun.svg" class="" />
+                  </div>
+                  <div class="task-personal-icon" v-else-if="(task.type === 'Personal')">
+                      <img src="../assets/boy.svg" />
+                  </div>
+                  <div class="task-work-icon" v-else>
+                      <img src="../assets/work.svg" />
+                  </div>
+    
+                  <div class="recent-title">
+                    <h3>{{ task.title }}</h3> 
+                    <span :class="[task.completed ? 'completed': 'ongoing']">{{ task.completed !== true ? "Ongoing" : `Completed`}}</span>
+                  </div>
                 </div>
               </div>
-            </div>
+            </el-row>
+            <el-row  v-else justify="center">
+              <el-empty description="No updates"></el-empty>
+            </el-row>
           </div>
           <div v-else>
             <BaseSkeleton />
